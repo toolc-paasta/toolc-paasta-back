@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  datasource:
+    url: jdbc:h2:tcp://localhost:9092/~/daycare
+#    url: jdbc:h2:C:/user/jisoo/daycare
+    username: sa
+    password: test
+    driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org.hibernate.SQL: debug
