@@ -54,7 +54,7 @@ public class TestController {
 
     }
 
-    //    @PostMapping("/")
+//    @PostMapping("/**")
     @PostConstruct
     public ResponseEntity<?> test() {
         Center center = Center.builder()
@@ -82,10 +82,8 @@ public class TestController {
         Student student = Student.builder()
                 .name("name")
                 .connectionNumber("010-1234-5678")
-                .loginId("loginId")
                 .sex(Sex.WOMAN)
                 .age(13)
-                .password("password")
                 .build();
         student.setShuttle(shuttle);
         student.setaClass(newClass);

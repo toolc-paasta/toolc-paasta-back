@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toolc.daycare.domain.BaseEntity;
 import toolc.daycare.domain.group.Area;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Shuttle;
@@ -15,9 +16,15 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Student extends MemberBaseEntity {
+public class Student extends BaseEntity {
 
+    private String name;
     private Integer age;
+    private String connectionNumber;
+
+    @Enumerated(value = EnumType.STRING)
+    private Sex sex;
+
 
     @ManyToOne
     @JoinColumn(name = "class_id")
@@ -36,10 +43,13 @@ public class Student extends MemberBaseEntity {
 
 
     @Builder
-    public Student(String loginId, String password, String name, String connectionNumber, Sex sex, Integer age) {
-        super(loginId, password, name, connectionNumber, sex);
+    public Student(String name, Integer age, String connectionNumber, Sex sex) {
+        this.name = name;
         this.age = age;
+        this.connectionNumber = connectionNumber;
+        this.sex = sex;
     }
+
 
     public void setaClass(Class aClass){
         this.aClass = aClass;
