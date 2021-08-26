@@ -17,14 +17,12 @@ import toolc.daycare.repository.interfaces.group.ShuttleRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
-import toolc.daycare.service.MemberService;
 
 import javax.annotation.PostConstruct;
 
 @RestController
 public class TestController {
 
-    private final MemberService memberService;
     private final CenterRepository centerRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
@@ -34,8 +32,7 @@ public class TestController {
     private final AreaRepository areaRepository;
 
     @Autowired
-    public TestController(MemberService memberService,
-                          CenterRepository centerRepository,
+    public TestController(CenterRepository centerRepository,
                           StudentRepository studentRepository,
                           TeacherRepository teacherRepository,
                           ClassRepository classRepository,
@@ -43,7 +40,6 @@ public class TestController {
                           ShuttleRepository shuttleRepository,
                           AreaRepository areaRepository
     ) {
-        this.memberService = memberService;
         this.centerRepository = centerRepository;
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
@@ -54,7 +50,7 @@ public class TestController {
 
     }
 
-//    @PostMapping("/**")
+    //    @PostMapping("/**")
     @PostConstruct
     public ResponseEntity<?> test() {
         Center center = Center.builder()
@@ -96,7 +92,6 @@ public class TestController {
                 .loginId("loginId")
                 .sex(Sex.WOMAN)
                 .password("password")
-                .isPrimary(true)
                 .build();
         parents.setStudents(student);
         parentsRepository.save(parents);
