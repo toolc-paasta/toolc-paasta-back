@@ -1,15 +1,15 @@
 package toolc.daycare.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,18 +17,31 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parents extends MemberBaseEntity{
 
-    private Boolean isPrimary;
+    private String childName;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date childBirthday;
+
+    @Enumerated(value = EnumType.STRING)
+    private Sex childSex;
+
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Builder
-
-    public Parents(String loginId, String password, String name, String connectionNumber, Sex sex, Boolean isPrimary) {
+    public Parents(String loginId, String password, String name, String connectionNumber, Sex sex,
+                   String childName, Date childBirthday, Sex childSex) {
         super(loginId, password, name, connectionNumber, sex);
-        this.isPrimary = isPrimary;
+        this.childName = childName;
+        this.childBirthday = childBirthday;
+        this.childSex = childSex;
     }
+
+
 
     public void setStudents(Student student){
         this.student = student;
