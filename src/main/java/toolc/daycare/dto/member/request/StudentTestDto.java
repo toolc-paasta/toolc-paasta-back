@@ -1,4 +1,4 @@
-package toolc.daycare.dto.member.student.request;
+package toolc.daycare.dto.member.request;
 
 
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package toolc.daycare.dto.member.director;
+package toolc.daycare.dto.member.request.director;
 
 import lombok.Builder;
 import lombok.Getter;

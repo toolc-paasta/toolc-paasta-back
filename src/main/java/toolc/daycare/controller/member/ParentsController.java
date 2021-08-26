@@ -8,7 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toolc.daycare.domain.member.Parents;
-import toolc.daycare.dto.member.parents.ParentsSignupRequestDto;
+import toolc.daycare.domain.member.Teacher;
+import toolc.daycare.dto.BaseResponseSuccessDto;
+import toolc.daycare.dto.member.request.LoginRequestDto;
+import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
+import toolc.daycare.dto.member.response.parents.ParentsLoginResponseDto;
+import toolc.daycare.dto.member.response.parents.ParentsSignupResponseDto;
+import toolc.daycare.dto.member.response.teacher.TeacherLoginResponseDto;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
 
@@ -48,6 +54,23 @@ public class ParentsController {
                 parentsSignupRequestDto.getChildSex()
                 );
 
+        BaseResponseSuccessDto responseBody = new ParentsSignupResponseDto(newParents);
         return ResponseEntity.ok(newParents);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto){
+        RequestUtil.checkNeedValue(
+                loginRequestDto.getLoginId(),
+                loginRequestDto.getPassword()
+        );
+
+        Parents loginParents = parentsService.login(
+                loginRequestDto.getLoginId(),
+                loginRequestDto.getPassword()
+        );
+
+        BaseResponseSuccessDto responseBody = new ParentsLoginResponseDto(loginParents);
+        return ResponseEntity.ok(responseBody);
     }
 }

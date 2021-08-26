@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Teacher;
-import toolc.daycare.dto.member.teacher.TeacherSignupRequestDto;
+import toolc.daycare.dto.BaseResponseSuccessDto;
+import toolc.daycare.dto.member.request.LoginRequestDto;
+import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
+import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
+import toolc.daycare.dto.member.response.teacher.TeacherLoginResponseDto;
+import toolc.daycare.dto.member.response.teacher.TeacherSignupResponseDto;
 import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
 
@@ -42,6 +48,24 @@ public class TeacherController {
                 teacherSignupRequestDto.getSex()
         );
 
-        return ResponseEntity.ok(newTeacher);
+        BaseResponseSuccessDto responseBody = new TeacherSignupResponseDto(newTeacher);
+        return ResponseEntity.ok(responseBody);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto){
+        RequestUtil.checkNeedValue(
+                loginRequestDto.getLoginId(),
+                loginRequestDto.getPassword()
+        );
+
+        Teacher loginTeacher = teacherService.login(
+                loginRequestDto.getLoginId(),
+                loginRequestDto.getPassword()
+        );
+
+        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
+        return ResponseEntity.ok(responseBody);
+    }
+
 }
