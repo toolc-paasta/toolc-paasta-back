@@ -50,7 +50,8 @@ public class TestController {
 
     }
 
-    //    @PostMapping("/**")
+
+//    @GetMapping("/**")
     @PostConstruct
     public ResponseEntity<?> test() {
         Center center = Center.builder()
@@ -97,6 +98,6 @@ public class TestController {
         parentsRepository.save(parents);
 
 
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok("hello");
     }
 }

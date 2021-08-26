@@ -13,7 +13,9 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = {
             NotExistRequestValueException.class,
             DuplicateMemberException.class,
-            NotCorrectRequestEnumException.class
+            NotCorrectRequestEnumException.class,
+            InvalidPasswordException.class,
+            NotExistMemberException.class
     })
     public ResponseEntity<?> badRequest(Exception e) {
         BaseResponseFailDto responseBody = BadRequestFailResponseDto.builder()
