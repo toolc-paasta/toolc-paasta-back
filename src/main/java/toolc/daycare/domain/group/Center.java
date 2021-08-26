@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toolc.daycare.domain.BaseEntity;
+import toolc.daycare.domain.member.Director;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,9 @@ import java.util.List;
 public class Center extends BaseEntity {
 
     private String name;
+
+    @OneToOne(mappedBy = "center")
+    private Director director;
 
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
