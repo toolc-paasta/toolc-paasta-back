@@ -46,4 +46,8 @@ public class DirectorService {
         return director;
     }
 
+    public Director findDirectorByLoginId(String loginId) {
+        return directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+    }
+
 }
