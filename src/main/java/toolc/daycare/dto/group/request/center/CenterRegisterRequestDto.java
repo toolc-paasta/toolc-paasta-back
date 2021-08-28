@@ -1,11 +1,14 @@
 package toolc.daycare.dto.group.request.center;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CenterRegisterRequestDto {
 
     private String directorLoginId;

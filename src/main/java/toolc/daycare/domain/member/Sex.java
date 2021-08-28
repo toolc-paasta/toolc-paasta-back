@@ -1,6 +1,7 @@
 package toolc.daycare.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Sex {
 
+    @JsonProperty("MAN")
     MAN("남성"),
+    @JsonProperty("WOMAN")
     WOMAN("여성");
 
     @JsonValue
@@ -19,13 +22,13 @@ public enum Sex {
         return this.sex;
     }
 
-    @JsonCreator
-    public static Sex getSexFromCode(String value){
-        for(Sex sex : Sex.values()){
-            if(sex.getSex().equals(value)){
-                return sex;
-            }
-        }
-        return null;
-    }
+//    @JsonCreator
+//    public static Sex getSexFromCode(String value){
+//        for(Sex sex : Sex.values()){
+//            if(sex.getSex().equals(value)){
+//                return sex;
+//            }
+//        }
+//        return null;
+//    }
 }

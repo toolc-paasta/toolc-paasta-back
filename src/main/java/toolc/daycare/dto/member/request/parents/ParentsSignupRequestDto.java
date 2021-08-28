@@ -1,12 +1,15 @@
 package toolc.daycare.dto.member.request.parents;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import toolc.daycare.domain.member.Sex;
 
 import java.util.Date;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParentsSignupRequestDto {
 
     //본인 정보
