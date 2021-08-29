@@ -37,8 +37,7 @@ public class DirectorController {
                 directorSignupRequestDto.getLoginId(),
                 directorSignupRequestDto.getPassword(),
                 directorSignupRequestDto.getName(),
-                directorSignupRequestDto.getConnectionNumber(),
-                directorSignupRequestDto.getName()
+                directorSignupRequestDto.getConnectionNumber()
         );
         RequestUtil.checkCorrectEnum(
                 directorSignupRequestDto.getSex()

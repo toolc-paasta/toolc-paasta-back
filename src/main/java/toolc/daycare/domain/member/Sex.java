@@ -22,13 +22,13 @@ public enum Sex {
         return this.sex;
     }
 
-//    @JsonCreator
-//    public static Sex getSexFromCode(String value){
-//        for(Sex sex : Sex.values()){
-//            if(sex.getSex().equals(value)){
-//                return sex;
-//            }
-//        }
-//        return null;
-//    }
+    @JsonCreator
+    public static Sex getSexFromCode(String value){
+        for(Sex sex : Sex.values()){
+            if(sex.getSex().equals(value)){
+                return sex;
+            }
+        }
+        return null;
+    }
 }
