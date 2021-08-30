@@ -1,26 +1,16 @@
 package toolc.daycare.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import toolc.daycare.ApiDocumentationTest;
 import toolc.daycare.controller.member.DirectorController;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
@@ -28,12 +18,6 @@ import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
 import toolc.daycare.exception.NotCorrectRequestEnumException;
 import toolc.daycare.exception.NotExistRequestValueException;
 import toolc.daycare.service.member.DirectorService;
-import toolc.daycare.testconfig.ApiDocumentUtils;
-import toolc.daycare.testconfig.CustomConfigMockMvc;
-import toolc.daycare.util.RequestUtil;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,51 +27,31 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
-import static toolc.daycare.testconfig.ApiDocumentUtils.getDocumentRequest;
-import static toolc.daycare.testconfig.ApiDocumentUtils.getDocumentResponse;
+import static toolc.daycare.utils.ApiDocumentUtils.getDocumentRequest;
+import static toolc.daycare.utils.ApiDocumentUtils.getDocumentResponse;
 
 
 //        (uriScheme = "https", uriHost = "docs.api.com")
+//@Import(ApiDocumentUtils.class)
+
 
 //방법 1 - beforeEach 사용
-@ExtendWith(RestDocumentationExtension.class)
+//@ExtendWith(RestDocumentationExtension.class)
 
 
 //방법 2 - auto
 //@CustomConfigMockMvc
 //@AutoConfigureRestDocs
-//@Import(ApiDocumentUtils.class)
 
 //공통
-@MockBean(JpaMetamodelMappingContext.class)
 @WebMvcTest(DirectorController.class)
-@DisplayName("센터 컨트롤러 테스트")
-class DirectorControllerTest {
-
-    //mock 설정
-//    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private WebApplicationContext ctx;
-
-    @BeforeEach
-    public void setup(RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
-                .addFilters(new CharacterEncodingFilter("UTF-8", true))
-                .alwaysDo(print())
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }
-
-    //x같은 잭슨에서 오브젝트 매퍼
-    @Autowired
-    private ObjectMapper objectMapper;
+@MockBean(JpaMetamodelMappingContext.class)
+@DisplayName("원장 회원 가입 테스트")
+class DirectorControllerSignUpTest extends ApiDocumentationTest {
 
     //mockBean 들
     @MockBean
@@ -102,7 +66,8 @@ class DirectorControllerTest {
 
 
     @Test
-    @DisplayName("원장 회원 가입 - 정상")
+    @Order(1)
+    @DisplayName("정상")
     void correctDirectorSignUp() throws Exception {
         //given
         DirectorSignupRequestDto requestDto = DirectorSignupRequestDto.builder()
@@ -155,7 +120,8 @@ class DirectorControllerTest {
 
 
     @Test
-    @DisplayName("원장 회원 가입 - 예외 - 입력 값 부족")
+    @Order(2)
+    @DisplayName("예외 - 입력 값 부족")
     void notExistRequestValueDirectorSignUp() throws Exception {
         //given
         DirectorSignupRequestDto requestDto = DirectorSignupRequestDto.builder()
@@ -191,14 +157,15 @@ class DirectorControllerTest {
 
         //restDoc 생성
         actions
-                .andDo(document("notExistRequestValueDirectorSignUp",
+                .andDo(document("notExistRequestValue",
                         getDocumentRequest(),
                         getDocumentResponse()));
 
     }
 
     @Test
-    @DisplayName("원장 회원 가입 - 예외 - 잘못된 enum 값")
+    @Order(3)
+    @DisplayName("예외 - 잘못된 enum 값")
     void notCorrectEnumRequestDirectorSignUp() throws Exception {
         //given
         String requestDto = "{\n" +
@@ -231,7 +198,7 @@ class DirectorControllerTest {
         verify(directorService, never()).signUp(any(), any(), any(), any(), any());
 
         actions
-                .andDo(document("notCorrectEnumRequestDirectorSignUp",
+                .andDo(document("notCorrectEnumRequest",
                         getDocumentRequest(),
                         getDocumentResponse()));
     }
@@ -241,7 +208,6 @@ class DirectorControllerTest {
         return Director.builder()
                 .name(NAME)
                 .loginId(LOGIN_ID)
-                .password(PASSWORD)
                 .connectionNumber(CONNECTION_NUMBER)
                 .sex(SEX)
                 .build();
