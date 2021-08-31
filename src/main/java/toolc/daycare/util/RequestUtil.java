@@ -1,8 +1,10 @@
 package toolc.daycare.util;
 
+import org.springframework.stereotype.Component;
 import toolc.daycare.exception.NotCorrectRequestEnumException;
 import toolc.daycare.exception.NotExistRequestValueException;
 
+@Component
 public class RequestUtil {
     public static void checkNeedValue(Object... args) {
         for (Object arg : args) {
