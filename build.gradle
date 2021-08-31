@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'java'
 }
 
@@ -13,6 +14,19 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs'
+	}
+}
+
 
 repositories {
 	mavenCentral()
@@ -36,8 +50,20 @@ dependencies {
 
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.5.RELEASE'
 }
 
 test {
 	useJUnitPlatform()
+	outputs.dir snippetsDir
 }
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+//asciidoctor.doFirst {
+//	delete file('src/main/resources/static/docs')
+//}
+

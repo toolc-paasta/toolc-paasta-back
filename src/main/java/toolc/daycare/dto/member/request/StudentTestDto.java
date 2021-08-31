@@ -1,12 +1,13 @@
 package toolc.daycare.dto.member.request;
 
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StudentTestDto {
     private String name;
     private String loginId;

@@ -2,6 +2,7 @@ package toolc.daycare.controller.member;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,8 @@ import toolc.daycare.dto.member.response.director.DirectorLoginResponseDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.util.RequestUtil;
+
+import java.net.URI;
 
 @Slf4j
 @RestController
@@ -33,7 +36,8 @@ public class DirectorController {
         RequestUtil.checkNeedValue(
                 directorSignupRequestDto.getLoginId(),
                 directorSignupRequestDto.getPassword(),
-                directorSignupRequestDto.getName()
+                directorSignupRequestDto.getName(),
+                directorSignupRequestDto.getConnectionNumber()
         );
         RequestUtil.checkCorrectEnum(
                 directorSignupRequestDto.getSex()
@@ -44,11 +48,12 @@ public class DirectorController {
                 directorSignupRequestDto.getLoginId(),
                 directorSignupRequestDto.getPassword(),
                 directorSignupRequestDto.getName(),
+                directorSignupRequestDto.getConnectionNumber(),
                 directorSignupRequestDto.getSex()
                 );
 
         BaseResponseSuccessDto responseBody = new DirectorSignupResponseDto(newDirector);
-        return ResponseEntity.ok(responseBody);
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

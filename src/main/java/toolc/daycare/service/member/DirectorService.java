@@ -27,12 +27,13 @@ public class DirectorService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Director signUp(String loginId, String password, String name, Sex sex) {
+    public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
         memberService.checkDuplicateMember(loginId);
         Director director = Director.builder()
                 .loginId(loginId)
                 .password(passwordEncoder.encode(password))
                 .name(name)
+                .connectionNumber(connectionNumber)
                 .sex(sex)
                 .build();
 
@@ -44,6 +45,10 @@ public class DirectorService {
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
         return director;
+    }
+
+    public Director findDirectorByLoginId(String loginId) {
+        return directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
     }
 
 }
