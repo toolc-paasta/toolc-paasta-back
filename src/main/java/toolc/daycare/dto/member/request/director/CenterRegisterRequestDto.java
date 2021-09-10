@@ -1,31 +1,25 @@
-package toolc.daycare.dto.group.request.center;
+package toolc.daycare.dto.member.request.director;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toolc.daycare.domain.member.Sex;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CenterRegisterRequestDto {
 
     private String loginId;
-    private String directorLoginId;
     private String centerName;
     private String address;
     private LocalDate foundationDate;
 
-
-    //TODO:  사업자 등록증 이미지 받기 필요
-
-
     @Builder
-    public CenterRegisterRequestDto(String loginId, String directorLoginId, String centerName, String address, LocalDate foundationDate) {
+    public CenterRegisterRequestDto(String loginId, String centerName, String address, LocalDate foundationDate) {
         this.loginId = loginId;
-        this.directorLoginId = directorLoginId;
         this.centerName = centerName;
         this.address = address;
         this.foundationDate = foundationDate;

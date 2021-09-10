@@ -25,6 +25,10 @@ import toolc.daycare.exception.NotExistRequestValueException;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.service.member.ParentsService;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,6 +63,10 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
     private String PASSWORD = "correctPassword";
     private String CONNECTION_NUMBER = "010-1234-1234";
     private Sex SEX = Sex.WOMAN;
+    private String CHILD_NAME = "correctC`1hildName";
+    private LocalDate CHILD_BIRTHDAY = LocalDate.of(2008, 7, 23);
+    private Sex CHILD_SEX = Sex.MAN;
+
 
     @Test
     @Order(1)
@@ -87,14 +95,18 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
                 .andExpect(jsonPath("$.response.loginId").value(equalTo(LOGIN_ID)))
                 .andExpect(jsonPath("$.response.name").value(equalTo(NAME)))
                 .andExpect(jsonPath("$.response.connectionNumber").value(equalTo(CONNECTION_NUMBER)))
-                .andExpect(jsonPath("$.response.sex").value(equalTo("여성")));
+                .andExpect(jsonPath("$.response.sex").value(equalTo("여성")))
+                .andExpect(jsonPath("$.response.childName").value(equalTo(CHILD_NAME)))
+                .andExpect(jsonPath("$.response.childBirthday").value(equalTo(CHILD_BIRTHDAY.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))))
+                .andExpect(jsonPath("$.response.childSex").value(equalTo("남성")))
+        ;
 
         //verify
         verify(parentsService).login(any(), any());
 
         //restDoc 생성
         actions
-                .andDo(document("correctDirectorLogin",
+                .andDo(document("correctParentsLogin",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         requestFields(
@@ -191,6 +203,9 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
                 .loginId(LOGIN_ID)
                 .connectionNumber(CONNECTION_NUMBER)
                 .sex(SEX)
+                .childName("childName")
+                .childBirthday(CHILD_BIRTHDAY)
+                .childSex(CHILD_SEX)
                 .build();
 
     }

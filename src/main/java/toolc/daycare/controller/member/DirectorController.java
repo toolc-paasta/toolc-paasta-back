@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
+import toolc.daycare.dto.member.request.director.CenterRegisterRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorLoginResponseDto;
+import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
+import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.util.RequestUtil;
 
-import java.net.URI;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,14 +53,14 @@ public class DirectorController {
                 directorSignupRequestDto.getName(),
                 directorSignupRequestDto.getConnectionNumber(),
                 directorSignupRequestDto.getSex()
-                );
+        );
 
         BaseResponseSuccessDto responseBody = new DirectorSignupResponseDto(newDirector);
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
         RequestUtil.checkNeedValue(
                 loginRequestDto.getLoginId(),
                 loginRequestDto.getPassword()
@@ -66,9 +69,27 @@ public class DirectorController {
         Director loginDirector = directorService.login(
                 loginRequestDto.getLoginId(),
                 loginRequestDto.getPassword()
-                );
+        );
 
         BaseResponseSuccessDto responseBody = new DirectorLoginResponseDto(loginDirector);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @PostMapping("/centerRegister")
+    public ResponseEntity<?> centerRegister(@RequestBody CenterRegisterRequestDto centerRegisterDto) {
+        RequestUtil.checkNeedValue(
+                centerRegisterDto.getCenterName(),
+                centerRegisterDto.getCenterName(),
+                centerRegisterDto.getAddress(),
+                centerRegisterDto.getFoundationDate()
+        );
+
+        FcmSendBody fcm = directorService.centerRegister(centerRegisterDto.getLoginId(),
+                centerRegisterDto.getCenterName(),
+                centerRegisterDto.getAddress(),
+                centerRegisterDto.getFoundationDate());
+
+        BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
         return ResponseEntity.ok(responseBody);
     }
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,10 +20,10 @@ public class Parents extends MemberBaseEntity{
 
     private String childName;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date childBirthday;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @Temporal(TemporalType.DATE)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate childBirthday;
 
     @Enumerated(value = EnumType.STRING)
     private Sex childSex;
@@ -33,9 +34,9 @@ public class Parents extends MemberBaseEntity{
     private Student student;
 
     @Builder
-    public Parents(String loginId, String password, String name, String connectionNumber, Sex sex,
-                   String childName, Date childBirthday, Sex childSex) {
-        super(loginId, password, name, connectionNumber, sex);
+    public Parents(String loginId, String password, String name, String connectionNumber, String token, Sex sex,
+                   String childName, LocalDate childBirthday, Sex childSex) {
+        super(loginId, password, name, connectionNumber, token, sex);
         this.childName = childName;
         this.childBirthday = childBirthday;
         this.childSex = childSex;

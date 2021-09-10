@@ -1,6 +1,5 @@
 package toolc.daycare.repository.interfaces.member;
 
-import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.MemberBaseEntity;
 
 import java.util.Optional;

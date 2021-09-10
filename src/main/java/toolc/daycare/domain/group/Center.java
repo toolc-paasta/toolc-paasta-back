@@ -10,6 +10,7 @@ import toolc.daycare.domain.BaseEntity;
 import toolc.daycare.domain.member.Director;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,10 @@ public class Center extends BaseEntity {
     private String name;
     private String address;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date foundationDate;
+//    @Temporal(TemporalType.DATE)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate foundationDate;
 
     private Long star;
 
@@ -40,7 +41,7 @@ public class Center extends BaseEntity {
 
     @Builder
 
-    public Center(String name, String address, Date foundationDate, Long star) {
+    public Center(String name, String address, LocalDate foundationDate, Long star) {
         this.name = name;
         this.address = address;
         this.foundationDate = foundationDate;

@@ -8,6 +8,7 @@ import toolc.daycare.domain.member.Director;
 import toolc.daycare.exception.AlreadyMatchCenterException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Slf4j
@@ -22,13 +23,12 @@ public class CenterService {
     }
 
     public Center register(Director director,
-                           String name, String address, Date foundationDate, Long star) {
+                           String name, String address, LocalDate foundationDate) {
         checkNotExistCenter(director);
         Center center = Center.builder()
                 .name(name)
                 .address(address)
                 .foundationDate(foundationDate)
-                .star(star)
                 .build();
         center.setDirector(director);
 
