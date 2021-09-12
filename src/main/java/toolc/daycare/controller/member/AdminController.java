@@ -57,6 +57,7 @@ public class AdminController {
 
     @PostMapping("allowCenter")
     public ResponseEntity<?> allowCenter(@RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
+
         //TODO : 나중에 권한으로 바꿔줘야함
         Admin admin = adminService.findAdminByLoginId(centerRegisterRequestDto.getLoginId());
 

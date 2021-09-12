@@ -60,6 +60,7 @@ public class DirectorService {
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
 
+        // TODO : 토큰 설정
         //토큰 설정 없어서 임시로 해놓음
         director.setToken("tokenTest");
         directorRepository.save(director);
@@ -69,6 +70,7 @@ public class DirectorService {
 
     public FcmSendBody centerRegister(String loginId, String centerName, String address, LocalDate foundationDate) {
 
+        // TODO : 메세지 보내는 사람도 필요하지 않을까? - DIRECTOR 불러줘야 할 것인가?
         Director director = directorRepository.findByLoginId(loginId)
                 .orElseThrow(NotExistMemberException::new);
         String title = "Center 등록 신청";
@@ -83,6 +85,7 @@ public class DirectorService {
         data.put("foundationDate", foundationDate);
 
 
+        // TODO : 메세지 보내는 사람도 필요하지 않을까?
         return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
 
     }

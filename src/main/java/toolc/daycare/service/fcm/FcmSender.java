@@ -31,7 +31,6 @@ public class FcmSender {
         for (String userId : targetUser) {
             tokens.add(memberRepository.findByLoginId(userId).get().getToken());
         }
-        log.info("많이 힘들다. {}", tokens);
 
         FcmSendBody fcmSendBody = FcmSendBody.builder()
                 .title(title)
