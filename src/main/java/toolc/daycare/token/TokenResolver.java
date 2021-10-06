@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import toolc.daycare.token.config.JwtSetConfig;
 
@@ -20,6 +21,7 @@ import java.util.Collections;
 
 import static toolc.daycare.token.AccessToken.GrantType.BEARER;
 
+@Component
 public class TokenResolver {
   private final SecretKey key;
   private static final String AUTHORIZATION_HEADER = "Authorization";
