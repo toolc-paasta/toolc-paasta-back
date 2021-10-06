@@ -4,9 +4,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import toolc.daycare.token.AccessToken;
 import toolc.daycare.token.JwtFormatter;
 import toolc.daycare.token.JwtSetConfig;
+import toolc.daycare.token.TokenParser;
 import toolc.daycare.token.time.ConstantTime;
 import toolc.daycare.token.time.CurrentTimeServer;
+import toolc.daycare.token.time.RealTime;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static java.time.ZoneOffset.UTC;
@@ -19,8 +22,12 @@ public class Fixture {
     return new ConstantTime(LocalDateTime.of(1998, 02, 25, 12, 12).toInstant(UTC));
   }
 
-  public static AccessToken accessToken(String loginId) {
-    return AccessToken.of(loginId, time());
+  public static CurrentTimeServer realTime() {
+    return new RealTime();
+  }
+
+  public static AccessToken accessToken(String loginId, CurrentTimeServer currentTimeServer) {
+    return AccessToken.issue(loginId, currentTimeServer);
   }
 
   public static JwtSetConfig jwtSetConfig() {
@@ -31,4 +38,7 @@ public class Fixture {
     return new JwtFormatter(jwtSetConfig());
   }
 
+  public static TokenParser tokenParser() {
+    return new TokenParser(jwtSetConfig());
+  }
 }

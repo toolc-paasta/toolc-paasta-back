@@ -5,7 +5,6 @@ import toolc.daycare.token.time.CurrentTimeServer;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 
 import static toolc.daycare.token.AccessToken.GrantType.BEARER;
@@ -20,12 +19,12 @@ public class AccessToken {
   Instant expirationAt;
   GrantType grantType = BEARER;
 
-  private AccessToken(String loginId, Instant expirationAt) {
+  public AccessToken(String loginId, Instant expirationAt) {
     this.loginId = loginId;
     this.expirationAt = expirationAt;
   }
 
-  public static AccessToken of(String loginId, CurrentTimeServer currentTimeServer) {
+  public static AccessToken issue(String loginId, CurrentTimeServer currentTimeServer) {
     return new AccessToken(loginId, currentTimeServer.now().truncatedTo(ChronoUnit.SECONDS).plus(ACCESS_TOKEN_EXPIRE_TIME));
   }
 }

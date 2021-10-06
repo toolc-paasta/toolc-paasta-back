@@ -9,12 +9,17 @@ import toolc.daycare.token.time.CurrentTimeServer;
 public class TokenService {
   final CurrentTimeServer currentTimeServer;
   final JwtFormatter jwtFormatter;
+  final TokenParser tokenParser;
 
   public AccessToken create(String loginId) {
-    return AccessToken.of(loginId, currentTimeServer);
+    return AccessToken.issue(loginId, currentTimeServer);
   }
 
   public TokenVO formatting(AccessToken accessToken) {
     return jwtFormatter.toJwt(accessToken);
+  }
+
+  public AccessToken parse(String tokenValue) {
+    return tokenParser.parse(tokenValue);
   }
 }
