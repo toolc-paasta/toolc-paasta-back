@@ -1,20 +1,18 @@
 package toolc.daycare.token;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import toolc.daycare.Matchers;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Period;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static toolc.daycare.Fixture.accessToken;
-import static toolc.daycare.Fixture.time;
+import static toolc.daycare.Fixture.*;
+import static toolc.daycare.Matchers.isAfter30MinutesFrom;
 
 class TokenServiceTest {
-  TokenService tokenService = new TokenService(time());
+  TokenService tokenService = new TokenService(time(), jwtFormatter());
 
   @Test
   void 토큰_만료시간_검사() {
@@ -22,6 +20,6 @@ class TokenServiceTest {
 
     AccessToken accessToken = tokenService.create(loginId);
 
-    assertThat(Duration.between(time().now(), accessToken.getExpirationAt()), is(AccessToken.ACCESS_TOKEN_EXPIRE_TIME));
+    assertThat(accessToken, isAfter30MinutesFrom(time().now()));
   }
 }
