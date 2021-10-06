@@ -3,6 +3,7 @@ package toolc.daycare.token;
 import lombok.Value;
 import toolc.daycare.token.time.CurrentTimeServer;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -15,7 +16,7 @@ public class AccessToken {
     BEARER
   }
   String loginId;
-  final static Period ACCESS_TOKEN_EXPIRE_TIME = Period.ofMonths(1);
+  final static Duration ACCESS_TOKEN_EXPIRE_TIME = Duration.ofDays(30);
   Instant expirationAt;
   GrantType grantType = BEARER;
 

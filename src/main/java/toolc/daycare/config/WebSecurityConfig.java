@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import toolc.daycare.token.time.CurrentTimeServer;
+import toolc.daycare.token.time.RealTime;
 
 @Configuration
 @EnableWebSecurity
@@ -24,4 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Bean
+    public CurrentTimeServer currentTimeServer() {
+        return new RealTime();
+    }
 }
