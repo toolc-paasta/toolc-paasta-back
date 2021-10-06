@@ -1,4 +1,4 @@
-package toolc.daycare.token.filter;
+package toolc.daycare.authentication.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toolc.daycare.token.TokenResolver;
+import toolc.daycare.authentication.TokenResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,6 +22,7 @@ public class TokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     String jwt = resolver.resolveRequest(request);
+    System.out.println("token is : " + jwt);
 
     if (StringUtils.hasText(jwt) && resolver.validateToken(jwt)) {
       Authentication authentication = resolver.getAuthentication(jwt);

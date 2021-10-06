@@ -1,4 +1,4 @@
-package toolc.daycare.token;
+package toolc.daycare.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -6,7 +6,7 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import toolc.daycare.token.config.JwtSetConfig;
+import toolc.daycare.authentication.config.JwtSetConfig;
 
 import java.time.Instant;
 

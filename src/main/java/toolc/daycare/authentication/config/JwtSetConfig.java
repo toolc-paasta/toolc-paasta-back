@@ -1,4 +1,4 @@
-package toolc.daycare.token.config;
+package toolc.daycare.authentication.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Value;

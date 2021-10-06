@@ -1,8 +1,8 @@
-package toolc.daycare.token;
+package toolc.daycare.authentication;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toolc.daycare.token.time.CurrentTimeServer;
+import toolc.daycare.authentication.time.CurrentTimeServer;
 
 @RequiredArgsConstructor
 @Service

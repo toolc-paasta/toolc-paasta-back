@@ -3,9 +3,7 @@ package toolc.daycare.service.member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.exception.NotExistMemberException;
@@ -14,6 +12,9 @@ import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.DirectorRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
+import toolc.daycare.authentication.AccessToken;
+import toolc.daycare.authentication.TokenService;
+import toolc.daycare.authentication.TokenVO;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -27,6 +28,7 @@ public class DirectorService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
     private final FcmSender fcmSender;
+    private final TokenService tokenService;
 
     @Autowired
     public DirectorService(MemberService memberService,
@@ -34,12 +36,14 @@ public class DirectorService {
                            AdminRepository adminRepository,
                            PasswordEncoder passwordEncoder,
                            FcmWebClient fcmWebClient,
-                           FcmSender fcmSender) {
+                           FcmSender fcmSender,
+                           TokenService tokenService) {
         this.memberService = memberService;
         this.adminRepository = adminRepository;
         this.directorRepository = directorRepository;
         this.passwordEncoder = passwordEncoder;
         this.fcmSender = fcmSender;
+        this.tokenService = tokenService;
     }
 
     public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
@@ -55,17 +59,17 @@ public class DirectorService {
         return directorRepository.save(director);
     }
 
-    public Director login(String loginId, String password) {
+    public TokenVO login(String loginId, String password) {
         Director director = directorRepository.findByLoginId(loginId)
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
 
-        // TODO : 토큰 설정
-        //토큰 설정 없어서 임시로 해놓음
-        director.setToken("tokenTest");
+        director.setToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
         directorRepository.save(director);
 
-        return director;
+        AccessToken accessToken = tokenService.create(loginId);
+
+        return tokenService.formatting(accessToken);
     }
 
     public FcmSendBody centerRegister(String loginId, String centerName, String address, LocalDate foundationDate) {

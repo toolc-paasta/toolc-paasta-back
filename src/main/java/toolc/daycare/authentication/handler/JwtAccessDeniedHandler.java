@@ -1,4 +1,4 @@
-package toolc.daycare.token.handler;
+package toolc.daycare.authentication.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
   public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
     response.setContentType("application/json;charset=UTF-8");
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    response.getWriter().write(mapper.writeValueAsString(new ResponseDto(HttpStatus.FORBIDDEN.toString(), accessDeniedException.getMessage())));
+    response.getWriter().write(mapper.writeValueAsString(new ResponseDto<>(HttpStatus.FORBIDDEN.value(), accessDeniedException.getMessage(), null)));
   }
 }

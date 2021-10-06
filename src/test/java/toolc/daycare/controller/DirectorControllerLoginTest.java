@@ -5,22 +5,19 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
 import toolc.daycare.ApiDocumentationTest;
 import toolc.daycare.controller.member.DirectorController;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.dto.member.request.LoginRequestDto;
-import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
-import toolc.daycare.exception.NotCorrectRequestEnumException;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.exception.NotExistRequestValueException;
 import toolc.daycare.service.member.DirectorService;
+import toolc.daycare.authentication.TokenVO;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +31,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static toolc.daycare.Fixture.*;
 import static toolc.daycare.utils.ApiDocumentUtils.getDocumentRequest;
 import static toolc.daycare.utils.ApiDocumentUtils.getDocumentResponse;
 
@@ -66,7 +64,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
                 .password(PASSWORD)
                 .build();
 
-        given(directorService.login(any(), any())).willReturn(getCorrectDirector());
+        given(directorService.login(any(), any())).willReturn(new TokenVO(jwtFormatter().toJwt(accessToken(LOGIN_ID, time())).getAccessToken()));
 
 
         //when

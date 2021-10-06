@@ -1,4 +1,4 @@
-package toolc.daycare.token.time;
+package toolc.daycare.authentication.time;
 
 import java.time.Instant;
 

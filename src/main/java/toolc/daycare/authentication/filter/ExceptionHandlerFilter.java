@@ -1,4 +1,4 @@
-package toolc.daycare.token.filter;
+package toolc.daycare.authentication.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import toolc.daycare.dto.ResponseDto;
-import toolc.daycare.token.exception.NotExistAuthorityException;
+import toolc.daycare.authentication.exception.NotExistAuthorityException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,6 +47,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     response.setStatus(status.value());
     response.setContentType("application/json;charset=UTF-8");
     ObjectMapper mapper = new ObjectMapper();
-    response.getWriter().write(mapper.writeValueAsString(new ResponseDto(status.toString(), e.getMessage())));
+    response.getWriter().write(mapper.writeValueAsString(new ResponseDto<>(status.value(), e.getMessage(), null)));
   }
 }

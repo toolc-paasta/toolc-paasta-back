@@ -1,4 +1,4 @@
-package toolc.daycare.token;
+package toolc.daycare.authentication;
 
 import lombok.Value;
 

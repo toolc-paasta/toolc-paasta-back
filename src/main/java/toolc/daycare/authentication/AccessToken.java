@@ -1,13 +1,13 @@
-package toolc.daycare.token;
+package toolc.daycare.authentication;
 
 import lombok.Value;
-import toolc.daycare.token.time.CurrentTimeServer;
+import toolc.daycare.authentication.time.CurrentTimeServer;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import static toolc.daycare.token.AccessToken.GrantType.BEARER;
+import static toolc.daycare.authentication.AccessToken.GrantType.BEARER;
 
 @Value
 public class AccessToken {

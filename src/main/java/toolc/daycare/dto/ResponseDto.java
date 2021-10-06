@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ResponseDto {
-  final String status;
+public class ResponseDto<T> {
+  final int status;
   final String message;
+  final T response;
 }

@@ -9,13 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import toolc.daycare.token.TokenResolver;
-import toolc.daycare.token.config.JwtSetConfig;
-import toolc.daycare.token.config.JwtSetConfigYaml;
-import toolc.daycare.token.handler.JwtAccessDeniedHandler;
-import toolc.daycare.token.handler.JwtAuthenticationEntryPoint;
-import toolc.daycare.token.time.CurrentTimeServer;
-import toolc.daycare.token.time.RealTime;
+import org.springframework.web.cors.CorsUtils;
+import toolc.daycare.authentication.TokenResolver;
+import toolc.daycare.authentication.handler.JwtAccessDeniedHandler;
+import toolc.daycare.authentication.handler.JwtAuthenticationEntryPoint;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,6 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .and()
 
       .authorizeRequests()
+      .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+      .antMatchers("/api/member/director").authenticated()
+      .antMatchers("/api/member/**").permitAll()
       .antMatchers("/**").permitAll()
       .and()
 

@@ -1,4 +1,4 @@
-package toolc.daycare.token;
+package toolc.daycare.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,14 +12,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import toolc.daycare.token.config.JwtSetConfig;
+import toolc.daycare.authentication.config.JwtSetConfig;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 
-import static toolc.daycare.token.AccessToken.GrantType.BEARER;
+import static toolc.daycare.authentication.AccessToken.GrantType.BEARER;
 
 @Component
 public class TokenResolver {

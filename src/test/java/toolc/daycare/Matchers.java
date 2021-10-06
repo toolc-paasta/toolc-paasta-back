@@ -3,9 +3,8 @@ package toolc.daycare;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import toolc.daycare.token.AccessToken;
+import toolc.daycare.authentication.AccessToken;
 
-import javax.persistence.Access;
 import java.time.Duration;
 import java.time.Instant;
 

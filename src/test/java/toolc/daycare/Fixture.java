@@ -1,13 +1,13 @@
 package toolc.daycare;
 
 import io.jsonwebtoken.SignatureAlgorithm;
-import toolc.daycare.token.AccessToken;
-import toolc.daycare.token.JwtFormatter;
-import toolc.daycare.token.config.JwtSetConfig;
-import toolc.daycare.token.TokenParser;
-import toolc.daycare.token.time.ConstantTime;
-import toolc.daycare.token.time.CurrentTimeServer;
-import toolc.daycare.token.time.RealTime;
+import toolc.daycare.authentication.AccessToken;
+import toolc.daycare.authentication.JwtFormatter;
+import toolc.daycare.authentication.config.JwtSetConfig;
+import toolc.daycare.authentication.TokenParser;
+import toolc.daycare.authentication.time.ConstantTime;
+import toolc.daycare.authentication.time.CurrentTimeServer;
+import toolc.daycare.authentication.time.RealTime;
 
 import java.time.LocalDateTime;
 
