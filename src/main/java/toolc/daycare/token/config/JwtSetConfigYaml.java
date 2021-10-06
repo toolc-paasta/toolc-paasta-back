@@ -1,4 +1,4 @@
-package toolc.daycare.token;
+package toolc.daycare.token.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;

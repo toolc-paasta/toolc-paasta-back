@@ -3,13 +3,12 @@ package toolc.daycare;
 import io.jsonwebtoken.SignatureAlgorithm;
 import toolc.daycare.token.AccessToken;
 import toolc.daycare.token.JwtFormatter;
-import toolc.daycare.token.JwtSetConfig;
+import toolc.daycare.token.config.JwtSetConfig;
 import toolc.daycare.token.TokenParser;
 import toolc.daycare.token.time.ConstantTime;
 import toolc.daycare.token.time.CurrentTimeServer;
 import toolc.daycare.token.time.RealTime;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static java.time.ZoneOffset.UTC;
