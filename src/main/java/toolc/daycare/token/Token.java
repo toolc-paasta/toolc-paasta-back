@@ -1,8 +1,8 @@
 package toolc.daycare.token;
 
-import lombok.Getter;
+import lombok.Value;
 
-@Getter
+@Value
 public class Token {
   enum GrantType {
     BEARER;
