@@ -25,7 +25,8 @@ public class Teacher extends MemberBaseEntity {
     private Class aClass;
 
     @Builder
-    public Teacher(String loginId, String password, String name, String connectionNumber, Sex sex) {
-        super(loginId, password, name, connectionNumber, sex);
+
+    public Teacher(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
+        super(loginId, password, name, connectionNumber, token, sex);
     }
 }

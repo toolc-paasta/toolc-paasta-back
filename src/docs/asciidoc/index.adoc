@@ -61,28 +61,7 @@ PaaS- ta toolc팀 api 명세서 입니다.
 | 요청한 리소스가 없음.
 |===
 
-
-
 = API 명세서
 
-== 원장님
+include::member.adoc[]
 
-=== 회원 가입
-==== Request
-Request :
-include::{snippets}/correctDirectorSignUp/http-request.adoc[]
-Request field:
-include::{snippets}/correctDirectorSignUp/request-fields.adoc[]
-
-
-==== Response
-성공 Response:
-include::{snippets}/correctDirectorSignUp/http-response.adoc[]
-
-실패 ResponseBody:
- +
-request filed 부족
-include::{snippets}/notExistRequestValueDirectorSignUp/response-body.adoc[]
-
-request enum 값 잘못 됨
-include::{snippets}/notCorrectEnumRequestDirectorSignUp/response-body.adoc[]

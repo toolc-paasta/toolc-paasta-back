@@ -2,11 +2,13 @@ package toolc.daycare.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.domain.group.Area;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Shuttle;
+import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
@@ -14,6 +16,7 @@ import toolc.daycare.repository.interfaces.group.AreaRepository;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.repository.interfaces.group.ShuttleRepository;
+import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
@@ -30,6 +33,9 @@ public class TestController {
     private final ParentsRepository parentsRepository;
     private final ShuttleRepository shuttleRepository;
     private final AreaRepository areaRepository;
+    private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public TestController(CenterRepository centerRepository,
@@ -38,7 +44,10 @@ public class TestController {
                           ClassRepository classRepository,
                           ParentsRepository parentsRepository,
                           ShuttleRepository shuttleRepository,
-                          AreaRepository areaRepository
+                          AreaRepository areaRepository,
+                          AdminRepository adminRepository,
+                          PasswordEncoder passwordEncoder
+
     ) {
         this.centerRepository = centerRepository;
         this.studentRepository = studentRepository;
@@ -47,7 +56,8 @@ public class TestController {
         this.parentsRepository = parentsRepository;
         this.shuttleRepository = shuttleRepository;
         this.areaRepository = areaRepository;
-
+        this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -96,6 +106,16 @@ public class TestController {
                 .build();
         parents.setStudents(student);
         parentsRepository.save(parents);
+
+        Admin admin = Admin.builder()
+                .name("Admin")
+                .connectionNumber("010-1234-5678")
+                .loginId("admin")
+                .sex(Sex.WOMAN)
+                .password(passwordEncoder.encode("1234"))
+                .build();
+        admin.setToken("adminToken");
+        adminRepository.save(admin);
 
 
         return ResponseEntity.ok("hello");

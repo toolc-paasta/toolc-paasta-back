@@ -4,12 +4,18 @@ spring:
       ddl-auto: create
 
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/~/daycare
+#    url: jdbc:h2:tcp://localhost:9092/~/daycare
 #    url: jdbc:h2:C:/user/jisoo/daycare
+    url: jdbc:h2:mem:testdb
     username: sa
-    password: test
+#    password: test
+    password:
     driver-class-name: org.h2.Driver
 
 logging:
   level:
     org.hibernate.SQL: debug
+
+jwt:
+  secretKey: dfjklaefjlaejfdcDfejA123idjfW123oidfRtestHfdjaidfRRtest12T3413dfjladfaeDFADFAdfvdsAERdfAERad12ADFerDFAvEFDF
+  algorithm: HS512
