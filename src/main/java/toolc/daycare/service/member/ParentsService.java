@@ -12,6 +12,7 @@ import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.member.DirectorRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class ParentsService {
     }
 
     public Parents signUp(String loginId, String password, String name, Sex sex,
-                          String childName, Date childBirthday, Sex childSex) {
+                          String childName, LocalDate childBirthday, Sex childSex) {
         memberService.checkDuplicateMember(loginId);
         Parents parents = Parents.builder()
                 .loginId(loginId)

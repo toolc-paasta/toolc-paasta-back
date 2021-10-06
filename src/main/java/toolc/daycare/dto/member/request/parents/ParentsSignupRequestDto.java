@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toolc.daycare.domain.member.Sex;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,12 +21,12 @@ public class ParentsSignupRequestDto {
 
     //자녀 정보
     private String childName;
-    private Date childBirthday;
+    private LocalDate childBirthday;
     private Sex childSex;
 
     @Builder
     public ParentsSignupRequestDto(String loginId, String password, String name, Sex sex,
-                                   String childName, Date childBirthday, Sex childSex) {
+                                   String childName, LocalDate childBirthday, Sex childSex) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;

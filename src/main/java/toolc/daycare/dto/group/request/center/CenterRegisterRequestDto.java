@@ -5,25 +5,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CenterRegisterRequestDto {
 
+    private String loginId;
     private String directorLoginId;
-    private String name;
+    private String centerName;
     private String address;
-    private Date foundationDate;
+    private LocalDate foundationDate;
 
-    private Long star;
+
+    //TODO:  사업자 등록증 이미지 받기 필요
+
 
     @Builder
-    public CenterRegisterRequestDto(String directorLoginId, String name, String address, Date foundationDate, Long star) {
+    public CenterRegisterRequestDto(String loginId, String directorLoginId, String centerName, String address, LocalDate foundationDate) {
+        this.loginId = loginId;
         this.directorLoginId = directorLoginId;
-        this.name = name;
+        this.centerName = centerName;
         this.address = address;
         this.foundationDate = foundationDate;
-        this.star = star;
     }
 }
