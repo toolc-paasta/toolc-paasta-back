@@ -11,14 +11,14 @@ public class FcmSendBody {
 
     private String title;
     private String body;
-    private List<String> targetUserToken;
+    private List<String> tokens;
     private Map<String, Object> data;
 
     @Builder
-    public FcmSendBody(String title, String body, List<String> targetUserToken, Map<String, Object> data) {
+    public FcmSendBody(String title, String body, List<String> tokens, Map<String, Object> data) {
         this.title = title;
         this.body = body;
-        this.targetUserToken = targetUserToken;
+        this.tokens = tokens;
         this.data = data;
     }
 }

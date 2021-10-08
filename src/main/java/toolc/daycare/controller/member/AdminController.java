@@ -48,7 +48,8 @@ public class AdminController {
 
         Admin loginAdmin = adminService.login(
                 loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
+                loginRequestDto.getPassword(),
+                loginRequestDto.getExpoToken()
         );
 
         BaseResponseSuccessDto responseBody = new AdminLoginResponseDto(loginAdmin);

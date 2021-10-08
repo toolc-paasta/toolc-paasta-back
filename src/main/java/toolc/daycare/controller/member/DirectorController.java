@@ -10,7 +10,7 @@ import toolc.daycare.domain.member.Director;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
-import toolc.daycare.dto.member.request.director.CenterRegisterRequestDto;
+import toolc.daycare.dto.member.request.director.DirectorRegisterCenterRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
@@ -77,26 +77,27 @@ public class DirectorController {
 
         TokenVO token = directorService.login(
                 loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
+                loginRequestDto.getPassword(),
+          loginRequestDto.getExpoToken()
         );
 
         ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
         return ResponseEntity.ok(responseBody);
     }
 
-    @PostMapping("/centerRegister")
-    public ResponseEntity<?> centerRegister(@RequestBody CenterRegisterRequestDto centerRegisterDto) {
+    @PostMapping("/registerCenter")
+    public ResponseEntity<?> DirectorRegisterCenter(@RequestBody DirectorRegisterCenterRequestDto directorRegisterCenterRequestDto) {
         RequestUtil.checkNeedValue(
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getAddress(),
-                centerRegisterDto.getFoundationDate()
+                directorRegisterCenterRequestDto.getCenterName(),
+                directorRegisterCenterRequestDto.getCenterName(),
+                directorRegisterCenterRequestDto.getAddress(),
+                directorRegisterCenterRequestDto.getFoundationDate()
         );
 
-        FcmSendBody fcm = directorService.centerRegister(centerRegisterDto.getLoginId(),
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getAddress(),
-                centerRegisterDto.getFoundationDate());
+        FcmSendBody fcm = directorService.centerRegister(directorRegisterCenterRequestDto.getLoginId(),
+                directorRegisterCenterRequestDto.getCenterName(),
+                directorRegisterCenterRequestDto.getAddress(),
+                directorRegisterCenterRequestDto.getFoundationDate());
 
         BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
         return ResponseEntity.ok(responseBody);

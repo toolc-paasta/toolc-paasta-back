@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginRequestDto {
 
-    private String loginId;
-    private String password;
+  private String loginId;
+  private String password;
+  private String expoToken;
 
-    @Builder
-    public LoginRequestDto(String loginId, String password) {
-        this.loginId = loginId;
-        this.password = password;
-    }
+  @Builder
+  public LoginRequestDto(String loginId, String password, String expoToken) {
+    this.loginId = loginId;
+    this.password = password;
+    this.expoToken = expoToken;
+  }
 
 }

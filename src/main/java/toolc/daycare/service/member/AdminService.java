@@ -7,8 +7,6 @@ import toolc.daycare.domain.member.Admin;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 
-import java.time.LocalDate;
-
 
 @Slf4j
 @Service
@@ -24,12 +22,12 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-    public Admin login(String loginId, String password) {
+    public Admin login(String loginId, String password, String expoToken) {
         Admin admin = findAdminByLoginId(loginId);
         memberService.checkLoginPassword(admin, password);
 
         //토큰 설정 없어서 임시로 해놓음
-        admin.setToken("tokenTest");
+        admin.setExpoToken(expoToken);
         adminRepository.save(admin);
 
         return admin;
