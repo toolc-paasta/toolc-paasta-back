@@ -26,7 +26,6 @@ public class AdminService {
         Admin admin = findAdminByLoginId(loginId);
         memberService.checkLoginPassword(admin, password);
 
-        //토큰 설정 없어서 임시로 해놓음
         admin.setExpoToken(expoToken);
         adminRepository.save(admin);
 

@@ -21,55 +21,56 @@ import toolc.daycare.util.RequestUtil;
 @RequestMapping("/api/member/parents")
 public class ParentsController {
 
-    private final ParentsService parentsService;
+  private final ParentsService parentsService;
 
-    @Autowired
-    public ParentsController(ParentsService parentsService) {
-        this.parentsService = parentsService;
-    }
+  @Autowired
+  public ParentsController(ParentsService parentsService) {
+    this.parentsService = parentsService;
+  }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody ParentsSignupRequestDto parentsSignupRequestDto) {
-        RequestUtil.checkNeedValue(
-                parentsSignupRequestDto.getLoginId(),
-                parentsSignupRequestDto.getPassword(),
-                parentsSignupRequestDto.getName(),
-                parentsSignupRequestDto.getChildName(),
-                parentsSignupRequestDto.getChildBirthday()
-        );
-        RequestUtil.checkCorrectEnum(
-                parentsSignupRequestDto.getSex(),
-                parentsSignupRequestDto.getChildSex()
-        );
+  @PostMapping("/signup")
+  public ResponseEntity<?> signUp(@RequestBody ParentsSignupRequestDto parentsSignupRequestDto) {
+    RequestUtil.checkNeedValue(
+      parentsSignupRequestDto.getLoginId(),
+      parentsSignupRequestDto.getPassword(),
+      parentsSignupRequestDto.getName(),
+      parentsSignupRequestDto.getChildName(),
+      parentsSignupRequestDto.getChildBirthday()
+    );
+    RequestUtil.checkCorrectEnum(
+      parentsSignupRequestDto.getSex(),
+      parentsSignupRequestDto.getChildSex()
+    );
 
-        Parents newParents = parentsService.signUp(
-                parentsSignupRequestDto.getLoginId(),
-                parentsSignupRequestDto.getPassword(),
-                parentsSignupRequestDto.getName(),
-                parentsSignupRequestDto.getSex(),
-                parentsSignupRequestDto.getChildName(),
-                parentsSignupRequestDto.getChildBirthday(),
-                parentsSignupRequestDto.getChildSex()
-                );
+    Parents newParents = parentsService.signUp(
+      parentsSignupRequestDto.getLoginId(),
+      parentsSignupRequestDto.getPassword(),
+      parentsSignupRequestDto.getName(),
+      parentsSignupRequestDto.getSex(),
+      parentsSignupRequestDto.getChildName(),
+      parentsSignupRequestDto.getChildBirthday(),
+      parentsSignupRequestDto.getChildSex()
+    );
 
-        BaseResponseSuccessDto responseBody = new ParentsSignupResponseDto(newParents);
-        return ResponseEntity.ok(newParents);
-    }
+    BaseResponseSuccessDto responseBody = new ParentsSignupResponseDto(newParents);
+    return ResponseEntity.ok(newParents);
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto){
-        RequestUtil.checkNeedValue(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
-        );
+  @PostMapping("/login")
+  public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
+    RequestUtil.checkNeedValue(
+      loginRequestDto.getLoginId(),
+      loginRequestDto.getPassword()
+    );
 
-        Parents loginParents = parentsService.login(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
-        );
+    Parents loginParents = parentsService.login(
+      loginRequestDto.getLoginId(),
+      loginRequestDto.getPassword(),
+      loginRequestDto.getExpoToken()
+    );
 
-        BaseResponseSuccessDto responseBody = new ParentsLoginResponseDto(loginParents);
-        return ResponseEntity.ok(responseBody);
-    }
+    BaseResponseSuccessDto responseBody = new ParentsLoginResponseDto(loginParents);
+    return ResponseEntity.ok(responseBody);
+  }
 
 }

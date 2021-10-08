@@ -65,7 +65,8 @@ public class TeacherController {
 
     Teacher loginTeacher = teacherService.login(
       loginRequestDto.getLoginId(),
-      loginRequestDto.getPassword()
+      loginRequestDto.getPassword(),
+      loginRequestDto.getExpoToken()
     );
 
     BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);

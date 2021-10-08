@@ -54,10 +54,12 @@ public class TeacherService {
     return teacherRepository.save(teacher);
   }
 
-  public Teacher login(String loginId, String password) {
+  public Teacher login(String loginId, String password, String expoToken) {
     Teacher teacher = teacherRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
+
     memberService.checkLoginPassword(teacher, password);
+    teacher.setExpoToken(expoToken);
     return teacher;
   }
 
