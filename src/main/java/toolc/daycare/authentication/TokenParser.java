@@ -5,8 +5,10 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import toolc.daycare.authentication.config.JwtSetConfig;
+import toolc.daycare.domain.member.Authority;
 
 import java.time.Instant;
 
@@ -28,7 +30,8 @@ public class TokenParser {
     final Claims claims = claimsJws.getBody();
     final String loginId = claims.getSubject();
     final Instant expiration = claims.getExpiration().toInstant();
+    final Authority authority = Authority.valueOf(claims.get(AccessToken.AUTHORITY_KEY).toString());
 
-    return new AccessToken(loginId, expiration);
+    return new AccessToken(loginId, expiration, authority);
   }
 }
