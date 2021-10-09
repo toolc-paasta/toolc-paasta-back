@@ -40,7 +40,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         RequestUtil.checkNeedValue(
                 loginRequestDto.getLoginId(),
                 loginRequestDto.getPassword()
