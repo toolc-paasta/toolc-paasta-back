@@ -1,7 +1,7 @@
 package toolc.daycare.service.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import toolc.daycare.authentication.AccessToken;
@@ -13,6 +13,7 @@ import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
+import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
@@ -30,8 +31,13 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class TeacherService {
+    private final MemberService memberService;
+    private final TeacherRepository teacherRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
   private final MemberService memberService;
   private final TokenService tokenService;

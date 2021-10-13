@@ -8,6 +8,7 @@ import toolc.daycare.authentication.TokenParser;
 import toolc.daycare.authentication.time.ConstantTime;
 import toolc.daycare.authentication.time.CurrentTimeServer;
 import toolc.daycare.authentication.time.RealTime;
+import toolc.daycare.domain.member.Authority;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ import static java.time.ZoneOffset.UTC;
 public class Fixture {
   static final String SECRET_KEY = "dfjklaefjlaejfdcDfejA123idjfW123oidfRtestHfdjaidfRRtest12T3413dfjladfaeDFADFAdfvdsAERdfAERad12ADFerDFAvEFDF";
   static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+  public static final Authority AUTHORITY = Authority.ADMIN;
 
   public static CurrentTimeServer time() {
     return new ConstantTime(LocalDateTime.of(1998, 02, 25, 12, 12).toInstant(UTC));
@@ -26,7 +28,7 @@ public class Fixture {
   }
 
   public static AccessToken accessToken(String loginId, CurrentTimeServer currentTimeServer) {
-    return AccessToken.issue(loginId, currentTimeServer);
+    return AccessToken.issue(loginId, currentTimeServer, AUTHORITY);
   }
 
   public static JwtSetConfig jwtSetConfig() {

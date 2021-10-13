@@ -7,18 +7,20 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import toolc.daycare.authentication.config.JwtSetConfig;
+import toolc.daycare.authentication.exception.NotExistAuthorityException;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
+import static toolc.daycare.authentication.AccessToken.AUTHORITY_KEY;
 import static toolc.daycare.authentication.AccessToken.GrantType.Bearer;
 
 
@@ -33,8 +35,13 @@ public class TokenResolver {
 
   public Authentication getAuthentication(String accessToken) {
     Claims claims = parseClaims(accessToken);
-    Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
 
+    if(claims.get(AUTHORITY_KEY) == null) {
+      throw new NotExistAuthorityException("토큰 내 권한이 없습니다.");
+    }
+
+    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority(claims.get(AUTHORITY_KEY).toString()));
     UserDetails principal = new User(claims.getSubject(), "",  authorities);
 
     return new UsernamePasswordAuthenticationToken(principal, "", authorities);

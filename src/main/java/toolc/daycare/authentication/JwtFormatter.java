@@ -10,6 +10,8 @@ import toolc.daycare.authentication.config.JwtSetConfig;
 import javax.crypto.SecretKey;
 import java.sql.Timestamp;
 
+import static toolc.daycare.authentication.AccessToken.AUTHORITY_KEY;
+
 @Component
 @RequiredArgsConstructor
 public class JwtFormatter {
@@ -22,6 +24,7 @@ public class JwtFormatter {
       .setSubject(accessToken.getLoginId())
       .setExpiration(Timestamp.from(accessToken.getExpirationAt()))
       .signWith(key, jwtConfig.getSignatureAlgorithm())
+      .claim(AUTHORITY_KEY, accessToken.getAuthority())
       .compact();
 
     return new TokenVO(accessTokenValue);
