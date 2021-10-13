@@ -9,10 +9,7 @@ import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
-import toolc.daycare.domain.member.Director;
-import toolc.daycare.domain.member.Sex;
-import toolc.daycare.domain.member.Student;
-import toolc.daycare.domain.member.Teacher;
+import toolc.daycare.domain.member.*;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
@@ -34,10 +31,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class TeacherService {
-    private final MemberService memberService;
-    private final TeacherRepository teacherRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+
 
   private final MemberService memberService;
   private final TokenService tokenService;
@@ -49,27 +43,6 @@ public class TeacherService {
   private final FcmSender fcmSender;
   private final PasswordEncoder passwordEncoder;
 
-
-  @Autowired
-  public TeacherService(MemberService memberService,
-                        TokenService tokenService,
-                        TeacherRepository teacherRepository,
-                        StudentRepository studentRepository,
-                        ParentsRepository parentsRepository,
-                        ClassRepository classRepository,
-                        CenterRepository centerRepository,
-                        FcmSender fcmSender,
-                        PasswordEncoder passwordEncoder) {
-    this.memberService = memberService;
-    this.tokenService = tokenService;
-    this.teacherRepository = teacherRepository;
-    this.studentRepository = studentRepository;
-    this.parentsRepository = parentsRepository;
-    this.classRepository = classRepository;
-    this.centerRepository = centerRepository;
-    this.fcmSender = fcmSender;
-    this.passwordEncoder = passwordEncoder;
-  }
 
   public Teacher signUp(String loginId, String password, String name, Sex sex) {
     memberService.checkDuplicateMember(loginId);
@@ -91,7 +64,7 @@ public class TeacherService {
     teacher.setExpoToken(expoToken);
     teacherRepository.save(teacher);
 
-    AccessToken accessToken = tokenService.create(loginId);
+    AccessToken accessToken = tokenService.create(loginId, Authority.TEACHER);
     return tokenService.formatting(accessToken);
   }
 

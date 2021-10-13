@@ -69,7 +69,8 @@ public class TeacherController {
 
         TokenVO token = teacherService.login(
           loginRequestDto.getLoginId(),
-          loginRequestDto.getPassword()
+          loginRequestDto.getPassword(),
+          loginRequestDto.getExpoToken()
         );
 
         ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
