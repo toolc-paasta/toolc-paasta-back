@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static toolc.daycare.domain.member.Authority.PARENT;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,12 +38,11 @@ public class Parents extends MemberBaseEntity{
     @Builder
     public Parents(String loginId, String password, String name, String connectionNumber, String token, Sex sex,
                    String childName, LocalDate childBirthday, Sex childSex) {
-        super(loginId, password, name, connectionNumber, token, sex);
+        super(loginId, password, name, connectionNumber, token, sex, PARENT);
         this.childName = childName;
         this.childBirthday = childBirthday;
         this.childSex = childSex;
     }
-
 
 
     public void setStudents(Student student){

@@ -14,7 +14,7 @@ class TokenServiceTest {
   void 토큰_만료시간_검사() {
     String loginId = "test001";
 
-    AccessToken accessToken = tokenService.create(loginId);
+    AccessToken accessToken = tokenService.create(loginId, AUTHORITY);
 
     assertThat(accessToken, isAfter30MinutesFrom(time().now()));
   }

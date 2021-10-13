@@ -42,6 +42,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
       .authorizeRequests()
       .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+      .antMatchers("/h2-console/**").permitAll()
+      // ADMIN 권한
+      .antMatchers("/api/member/admin/allowCenter").hasAuthority("ADMIN")
+
+      // DIRECTOR 권한
+      .antMatchers("/api/member/director/centerRegister").hasAuthority("DIRECTOR")
+
+      // TEACHER 권한
+      // 추가 예정
+
+      // PARENT 권한
+      // 추가예정
+
       .antMatchers("/api/member/director").authenticated()
       .antMatchers("/api/member/**").permitAll()
       .antMatchers("/**").permitAll()

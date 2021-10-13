@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.BaseResponseSuccessDto;
+import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
@@ -17,6 +19,8 @@ import toolc.daycare.dto.member.response.teacher.TeacherLoginResponseDto;
 import toolc.daycare.dto.member.response.teacher.TeacherSignupResponseDto;
 import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestController
@@ -53,19 +57,27 @@ public class TeacherController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
         RequestUtil.checkNeedValue(
                 loginRequestDto.getLoginId(),
                 loginRequestDto.getPassword()
         );
 
-        Teacher loginTeacher = teacherService.login(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
+        TokenVO token = teacherService.login(
+          loginRequestDto.getLoginId(),
+          loginRequestDto.getPassword()
         );
 
-        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
+        ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
         return ResponseEntity.ok(responseBody);
+
+//        Teacher loginTeacher = teacherService.login(
+//                loginRequestDto.getLoginId(),
+//                loginRequestDto.getPassword()
+//        );
+//
+//        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
+//        return ResponseEntity.ok(responseBody);
     }
 
 

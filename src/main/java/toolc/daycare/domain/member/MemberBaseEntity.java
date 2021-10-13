@@ -26,14 +26,17 @@ public class MemberBaseEntity extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private Sex sex;
 
+    @Enumerated(value = EnumType.STRING)
+    private Authority authority;
 
-    public MemberBaseEntity(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
+    public MemberBaseEntity(String loginId, String password, String name, String connectionNumber, String token, Sex sex, Authority authority) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.connectionNumber = connectionNumber;
         this.token = token;
         this.sex = sex;
+        this.authority = authority;
     }
 
     //TODO : 토큰 받아서 처리해줘야함

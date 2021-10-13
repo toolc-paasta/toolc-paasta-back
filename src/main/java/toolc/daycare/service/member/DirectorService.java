@@ -67,7 +67,7 @@ public class DirectorService {
         director.setToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
         directorRepository.save(director);
 
-        AccessToken accessToken = tokenService.create(loginId);
+        AccessToken accessToken = tokenService.create(loginId, director.getAuthority());
 
         return tokenService.formatting(accessToken);
     }
@@ -88,10 +88,8 @@ public class DirectorService {
         data.put("address", address);
         data.put("foundationDate", foundationDate);
 
-
         // TODO : 메세지 보내는 사람도 필요하지 않을까?
         return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
-
     }
 
 
