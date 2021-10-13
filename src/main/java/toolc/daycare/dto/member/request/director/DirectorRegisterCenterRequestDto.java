@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CenterRegisterRequestDto {
+public class DirectorRegisterCenterRequestDto {
 
     private String loginId;
     private String centerName;
@@ -18,7 +18,7 @@ public class CenterRegisterRequestDto {
     private LocalDate foundationDate;
 
     @Builder
-    public CenterRegisterRequestDto(String loginId, String centerName, String address, LocalDate foundationDate) {
+    public DirectorRegisterCenterRequestDto(String loginId, String centerName, String address, LocalDate foundationDate) {
         this.loginId = loginId;
         this.centerName = centerName;
         this.address = address;

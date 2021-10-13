@@ -7,17 +7,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import static toolc.daycare.authentication.AccessToken.GrantType.BEARER;
+import static toolc.daycare.authentication.AccessToken.GrantType.Bearer;
 
 @Value
 public class AccessToken {
   enum GrantType {
-    BEARER
+    Bearer
   }
   String loginId;
   final static Duration ACCESS_TOKEN_EXPIRE_TIME = Duration.ofDays(30);
   Instant expirationAt;
-  GrantType grantType = BEARER;
+  GrantType grantType = Bearer;
 
   public AccessToken(String loginId, Instant expirationAt) {
     this.loginId = loginId;

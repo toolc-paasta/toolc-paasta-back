@@ -2,7 +2,6 @@ package toolc.daycare.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toolc.daycare.domain.BaseEntity;
@@ -22,23 +21,23 @@ public class MemberBaseEntity extends BaseEntity {
 
     private String name;
     private String connectionNumber;
-    private String token;
+    private String expoToken;
     @Enumerated(value = EnumType.STRING)
     private Sex sex;
 
 
-    public MemberBaseEntity(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
+    public MemberBaseEntity(String loginId, String password, String name, String connectionNumber, String expoToken, Sex sex) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.connectionNumber = connectionNumber;
-        this.token = token;
+        this.expoToken = expoToken;
         this.sex = sex;
     }
 
     //TODO : 토큰 받아서 처리해줘야함
     //토큰 따로 발급 방법 안정해서 임시로 해놓음
-    public void setToken(String token){
-        this.token = token;
+    public void setExpoToken(String token){
+        this.expoToken = token;
     }
 }

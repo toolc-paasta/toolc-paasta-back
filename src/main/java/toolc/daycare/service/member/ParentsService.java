@@ -49,10 +49,12 @@ public class ParentsService {
         return parentsRepository.save(parents);
     }
 
-    public Parents login(String loginId, String password){
+    public Parents login(String loginId, String password, String expoToken){
         Parents parents = parentsRepository.findByLoginId(loginId)
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(parents, password);
+
+        parents.setExpoToken(expoToken);
         return parents;
     }
 }

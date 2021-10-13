@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 public class Admin extends MemberBaseEntity{
 
     @Builder
-    public Admin(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
-        super(loginId, password, name, connectionNumber, token, sex);
+    public Admin(String loginId, String password, String name, String connectionNumber, String expoToken, Sex sex) {
+        super(loginId, password, name, connectionNumber, expoToken, sex);
     }
 }

@@ -59,12 +59,12 @@ public class DirectorService {
         return directorRepository.save(director);
     }
 
-    public TokenVO login(String loginId, String password) {
+    public TokenVO login(String loginId, String password, String expoToken) {
         Director director = directorRepository.findByLoginId(loginId)
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
 
-        director.setToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
+        director.setExpoToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
         directorRepository.save(director);
 
         AccessToken accessToken = tokenService.create(loginId);
@@ -78,7 +78,7 @@ public class DirectorService {
         Director director = directorRepository.findByLoginId(loginId)
                 .orElseThrow(NotExistMemberException::new);
         String title = "Center 등록 신청";
-        String body = director.getName() + " 님의 " + centerName + "Center 등록 신청";
+        String body = director.getName() + " 님의 " + centerName + " Center 등록 신청";
 
         List<String> targetUser = new LinkedList<>();
         adminRepository.findAll().forEach(e -> targetUser.add(e.getLoginId()));
