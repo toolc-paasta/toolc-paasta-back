@@ -14,6 +14,7 @@ import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
+import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
 import toolc.daycare.dto.member.response.teacher.TeacherLoginResponseDto;
 import toolc.daycare.dto.member.response.teacher.TeacherSignupResponseDto;
@@ -74,12 +75,22 @@ public class TeacherController {
     return ResponseEntity.ok(responseBody);
   }
 
+  @PostMapping("/registerClass")
+  public ResponseEntity<?> registerClass(@Auth String loginId, @RequestBody RegisterClassRequestDto dto) {
+    log.info(loginId);
+    FcmSendBody fcm = teacherService.registerClass(loginId, dto);
+
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "반 등록 요청 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+
+
   @PostMapping("/message/sendClass")
   public ResponseEntity<?> sendClass(@Auth String loginId, @RequestBody MessageSendRequestDto dto) {
     log.info(loginId);
     FcmSendBody fcm = teacherService.sendMessage(loginId, dto);
 
-    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", fcm);
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "담당 반 부모님 메시지 보내기 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
 }

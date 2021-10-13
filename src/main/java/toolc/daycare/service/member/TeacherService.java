@@ -7,16 +7,17 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
-import toolc.daycare.domain.member.Parents;
+import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
+import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
-import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
@@ -37,6 +38,8 @@ public class TeacherService {
   private final TeacherRepository teacherRepository;
   private final StudentRepository studentRepository;
   private final ParentsRepository parentsRepository;
+  private final ClassRepository classRepository;
+  private final CenterRepository centerRepository;
   private final FcmSender fcmSender;
   private final PasswordEncoder passwordEncoder;
 
@@ -47,6 +50,8 @@ public class TeacherService {
                         TeacherRepository teacherRepository,
                         StudentRepository studentRepository,
                         ParentsRepository parentsRepository,
+                        ClassRepository classRepository,
+                        CenterRepository centerRepository,
                         FcmSender fcmSender,
                         PasswordEncoder passwordEncoder) {
     this.memberService = memberService;
@@ -54,6 +59,8 @@ public class TeacherService {
     this.teacherRepository = teacherRepository;
     this.studentRepository = studentRepository;
     this.parentsRepository = parentsRepository;
+    this.classRepository = classRepository;
+    this.centerRepository = centerRepository;
     this.fcmSender = fcmSender;
     this.passwordEncoder = passwordEncoder;
   }
@@ -80,6 +87,35 @@ public class TeacherService {
 
     AccessToken accessToken = tokenService.create(loginId);
     return tokenService.formatting(accessToken);
+  }
+
+  public FcmSendBody registerClass(String loginId, RegisterClassRequestDto dto){
+    Teacher teacher = teacherRepository.findByLoginId(loginId)
+      .orElseThrow(NotExistMemberException::new);
+
+    List<String> targetUser = new LinkedList<>();
+    Long centerId = centerRepository.findByName(dto.getCenterName()).getId();
+    Class registerClass = classRepository.findByNameAndCenterId(dto.getClassName(), centerId);
+
+    log.info("class name = {}", registerClass.getName());
+
+    String title = teacher.getName() + "선생님의 " + registerClass.getName() + " 반 등록 신청입니다.";
+    String body = teacher.getName() + "선생님의 " + registerClass.getName() + " 반 등록 신청입니다.";
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("temp", "temp");
+
+    log.info("test");
+    log.info("center = {}", registerClass.getCenter());
+    log.info("director = {}", registerClass.getCenter().getDirector());
+    log.info("dir loginId = {}", registerClass.getCenter().getDirector().getLoginId());
+    targetUser.add(registerClass.getCenter().getDirector().getLoginId());
+
+
+    FcmSendBody fcmSendBody = fcmSender.sendFcmJson(title, body, targetUser, data);
+    log.info("fcm = {}" , fcmSendBody);
+    return null;
+
   }
 
 
