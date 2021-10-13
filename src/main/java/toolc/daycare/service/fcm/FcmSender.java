@@ -16,36 +16,37 @@ import java.util.Map;
 @Service
 public class FcmSender {
 
-    private FcmWebClient fcmWebClient;
-    private MemberRepository memberRepository;
+  private FcmWebClient fcmWebClient;
+  private MemberRepository memberRepository;
 
-    @Autowired
-    public FcmSender(FcmWebClient fcmWebClient,
-                     MemberRepository memberRepository) {
-        this.fcmWebClient = fcmWebClient;
-        this.memberRepository = memberRepository;
+  @Autowired
+  public FcmSender(FcmWebClient fcmWebClient,
+                   MemberRepository memberRepository) {
+    this.fcmWebClient = fcmWebClient;
+    this.memberRepository = memberRepository;
+  }
+
+  public FcmSendBody sendFcmJson(/*String senderName, */String title, String body, List<String> targetUser, Map<String, Object> data) {
+
+    List<String> targetTokens = new LinkedList<>();
+    for (String userId : targetUser) {
+      targetTokens.add(memberRepository.findByLoginId(userId).get().getExpoToken());
     }
 
-    public FcmSendBody sendFcmJson(/*String senderName, */String title, String body, List<String> targetUser, Map<String, Object> data) {
-        List<String> tokens = new LinkedList<>();
-        for (String userId : targetUser) {
-            tokens.add(memberRepository.findByLoginId(userId).get().getToken());
-        }
+    FcmSendBody fcmSendBody = FcmSendBody.builder()
+      .title(title)
+      .body(body)
+      .tokens(targetTokens)
+      .data(data)
+      .build();
 
-        FcmSendBody fcmSendBody = FcmSendBody.builder()
-                .title(title)
-                .body(body)
-                .tokens(tokens)
-                .data(data)
-                .build();
+    Mono<String> mono = fcmWebClient.webClient().post()
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(fcmSendBody)
+      .retrieve()
+      .bodyToMono(String.class);
 
-        Mono<String> mono = fcmWebClient.webClient().post()
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(fcmSendBody)
-                .retrieve()
-                .bodyToMono(String.class);
-
-        log.info("mono = {}", mono.block());
-        return fcmSendBody;
-    }
+    log.info("mono = {}", mono.block());
+    return fcmSendBody;
+  }
 }

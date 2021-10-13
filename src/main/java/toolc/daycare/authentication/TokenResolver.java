@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static toolc.daycare.authentication.AccessToken.AUTHORITY_KEY;
-import static toolc.daycare.authentication.AccessToken.GrantType.BEARER;
+import static toolc.daycare.authentication.AccessToken.GrantType.Bearer;
+
 
 @Component
 public class TokenResolver {
@@ -53,8 +54,8 @@ public class TokenResolver {
 
   public String resolveRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER.toString())) {
-      return bearerToken.substring(BEARER.toString().length());
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(Bearer.toString())) {
+      return bearerToken.substring(Bearer.toString().length());
     }
     return null;
   }

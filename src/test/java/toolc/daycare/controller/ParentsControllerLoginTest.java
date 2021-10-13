@@ -78,7 +78,7 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
                 .password(PASSWORD)
                 .build();
 
-        given(parentsService.login(any(), any())).willReturn(getCorrectDirector());
+        given(parentsService.login(any(), any(), any())).willReturn(getCorrectDirector());
 
 
         //when
@@ -102,7 +102,7 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
         ;
 
         //verify
-        verify(parentsService).login(any(), any());
+        verify(parentsService).login(any(), any(), any());
 
         //restDoc 생성
         actions

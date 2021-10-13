@@ -64,7 +64,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
                 .password(PASSWORD)
                 .build();
 
-        given(directorService.login(any(), any())).willReturn(new TokenVO(jwtFormatter().toJwt(accessToken(LOGIN_ID, time())).getAccessToken()));
+        given(directorService.login(any(), any(),any())).willReturn(new TokenVO(jwtFormatter().toJwt(accessToken(LOGIN_ID, time())).getAccessToken()));
 
 
         //when
@@ -84,7 +84,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
                 .andExpect(jsonPath("$.response.sex").value(equalTo("여성")));
 
         //verify
-        verify(directorService).login(any(), any());
+        verify(directorService).login(any(), any(), any());
 
         //restDoc 생성
         actions
@@ -129,7 +129,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
 
 
         //verify
-        verify(directorService, never()).login(any(), any());
+        verify(directorService, never()).login(any(), any(),any());
 
         //restDoc 생성
         actions
@@ -149,7 +149,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
                 .password("InvalidPassword")
                 .build();
 
-        given(directorService.login(any(), any())).willThrow(new NotExistMemberException());
+        given(directorService.login(any(), any(), any())).willThrow(new NotExistMemberException());
 
         //when
         ResultActions actions = mockMvc.perform(post("/api/member/director/login")
@@ -170,7 +170,7 @@ class DirectorControllerLoginTest extends ApiDocumentationTest {
 
 
         //verify
-        verify(directorService, times(1)).login(any(), any());
+        verify(directorService, times(1)).login(any(), any(), any());
 
         actions
                 .andDo(document("notExistMemberLogin",
