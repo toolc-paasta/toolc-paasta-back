@@ -10,7 +10,7 @@ import toolc.daycare.domain.member.Director;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
-import toolc.daycare.dto.member.request.director.CenterRegisterRequestDto;
+import toolc.daycare.dto.member.request.director.DirectorRegisterCenterRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
@@ -27,78 +27,80 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/member/director")
 public class DirectorController {
 
-    private final DirectorService directorService;
+  private final DirectorService directorService;
 
-    @Autowired
-    public DirectorController(DirectorService directorService) {
-        this.directorService = directorService;
-    }
+  @Autowired
+  public DirectorController(DirectorService directorService) {
+    this.directorService = directorService;
+  }
 
-    @GetMapping // Test용도
-    public ResponseEntity<?> getInfo(@Auth String loginId) {
-        Director director = directorService.findDirectorByLoginId(loginId);
+  @GetMapping // Test용도
+  public ResponseEntity<?> getInfo(@Auth String loginId) {
+    Director director = directorService.findDirectorByLoginId(loginId);
 
-        ResponseDto<Director> response = new ResponseDto<>(OK.value(), "정보 가져오기 성공", director);
+    ResponseDto<Director> response = new ResponseDto<>(OK.value(), "정보 가져오기 성공", director);
 
-        return ResponseEntity.ok(response);
-    }
+    return ResponseEntity.ok(response);
+  }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody DirectorSignupRequestDto directorSignupRequestDto) {
-        RequestUtil.checkNeedValue(
-                directorSignupRequestDto.getLoginId(),
-                directorSignupRequestDto.getPassword(),
-                directorSignupRequestDto.getName(),
-                directorSignupRequestDto.getConnectionNumber()
-        );
-        RequestUtil.checkCorrectEnum(
-                directorSignupRequestDto.getSex()
-        );
+  @PostMapping("/signup")
+  public ResponseEntity<?> signUp(@RequestBody DirectorSignupRequestDto directorSignupRequestDto) {
+    RequestUtil.checkNeedValue(
+      directorSignupRequestDto.getLoginId(),
+      directorSignupRequestDto.getPassword(),
+      directorSignupRequestDto.getName(),
+      directorSignupRequestDto.getConnectionNumber()
+    );
+    RequestUtil.checkCorrectEnum(
+      directorSignupRequestDto.getSex()
+    );
 
 
-        Director newDirector = directorService.signUp(
-                directorSignupRequestDto.getLoginId(),
-                directorSignupRequestDto.getPassword(),
-                directorSignupRequestDto.getName(),
-                directorSignupRequestDto.getConnectionNumber(),
-                directorSignupRequestDto.getSex()
-        );
+    Director newDirector = directorService.signUp(
+      directorSignupRequestDto.getLoginId(),
+      directorSignupRequestDto.getPassword(),
+      directorSignupRequestDto.getName(),
+      directorSignupRequestDto.getConnectionNumber(),
+      directorSignupRequestDto.getSex()
+    );
 
-        BaseResponseSuccessDto responseBody = new DirectorSignupResponseDto(newDirector);
-        return new ResponseEntity<>(responseBody, CREATED);
-    }
+    BaseResponseSuccessDto responseBody = new DirectorSignupResponseDto(newDirector);
+    return new ResponseEntity<>(responseBody, CREATED);
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
-        RequestUtil.checkNeedValue(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
-        );
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+    RequestUtil.checkNeedValue(
+      loginRequestDto.getLoginId(),
+      loginRequestDto.getPassword()
+    );
 
-        TokenVO token = directorService.login(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
-        );
+    TokenVO token = directorService.login(
+      loginRequestDto.getLoginId(),
+      loginRequestDto.getPassword(),
+      loginRequestDto.getExpoToken()
+    );
 
-        ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
-        return ResponseEntity.ok(responseBody);
-    }
+    ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
+    return ResponseEntity.ok(responseBody);
+  }
 
-    @PostMapping("/centerRegister")
-    public ResponseEntity<?> centerRegister(@RequestBody CenterRegisterRequestDto centerRegisterDto) {
-        RequestUtil.checkNeedValue(
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getAddress(),
-                centerRegisterDto.getFoundationDate()
-        );
+  @PostMapping("/registerCenter")
+  public ResponseEntity<?> DirectorRegisterCenter(@Auth String loginId, @RequestBody DirectorRegisterCenterRequestDto directorRegisterCenterRequestDto) {
+    log.info("loginId = {}", loginId);
+    RequestUtil.checkNeedValue(
+      directorRegisterCenterRequestDto.getCenterName(),
+      directorRegisterCenterRequestDto.getCenterName(),
+      directorRegisterCenterRequestDto.getAddress(),
+      directorRegisterCenterRequestDto.getFoundationDate()
+    );
 
-        FcmSendBody fcm = directorService.centerRegister(centerRegisterDto.getLoginId(),
-                centerRegisterDto.getCenterName(),
-                centerRegisterDto.getAddress(),
-                centerRegisterDto.getFoundationDate());
+    FcmSendBody fcm = directorService.centerRegister(directorRegisterCenterRequestDto.getLoginId(),
+      directorRegisterCenterRequestDto.getCenterName(),
+      directorRegisterCenterRequestDto.getAddress(),
+      directorRegisterCenterRequestDto.getFoundationDate());
 
-        BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
-        return ResponseEntity.ok(responseBody);
-    }
+    BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
+    return ResponseEntity.ok(responseBody);
+  }
 }

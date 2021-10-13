@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CenterRegisterRequestDto {
 
-    private String loginId;
     private String directorLoginId;
     private String centerName;
     private String address;
@@ -23,8 +22,7 @@ public class CenterRegisterRequestDto {
 
 
     @Builder
-    public CenterRegisterRequestDto(String loginId, String directorLoginId, String centerName, String address, LocalDate foundationDate) {
-        this.loginId = loginId;
+    public CenterRegisterRequestDto(String directorLoginId, String centerName, String address, LocalDate foundationDate) {
         this.directorLoginId = directorLoginId;
         this.centerName = centerName;
         this.address = address;

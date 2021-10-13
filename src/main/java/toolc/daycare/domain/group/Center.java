@@ -1,18 +1,16 @@
 package toolc.daycare.domain.group;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import toolc.daycare.domain.BaseEntity;
 import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.member.Teacher;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -39,8 +37,10 @@ public class Center extends BaseEntity {
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
     private List<Class> classes = new ArrayList<>();
 
-    @Builder
+//    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+//    private List<Teacher> teachers = new ArrayList<>();
 
+    @Builder
     public Center(String name, String address, LocalDate foundationDate, Long star) {
         this.name = name;
         this.address = address;

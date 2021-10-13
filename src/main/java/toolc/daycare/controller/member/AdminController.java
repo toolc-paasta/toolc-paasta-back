@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toolc.daycare.authentication.Auth;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Director;
@@ -40,7 +41,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         RequestUtil.checkNeedValue(
                 loginRequestDto.getLoginId(),
                 loginRequestDto.getPassword()
@@ -48,7 +49,8 @@ public class AdminController {
 
         Admin loginAdmin = adminService.login(
                 loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
+                loginRequestDto.getPassword(),
+                loginRequestDto.getExpoToken()
         );
 
         BaseResponseSuccessDto responseBody = new AdminLoginResponseDto(loginAdmin);
@@ -56,10 +58,10 @@ public class AdminController {
     }
 
     @PostMapping("allowCenter")
-    public ResponseEntity<?> allowCenter(@RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
+    public ResponseEntity<?> allowCenter(@Auth String loginId, @RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
 
         //TODO : 나중에 권한으로 바꿔줘야함
-        Admin admin = adminService.findAdminByLoginId(centerRegisterRequestDto.getLoginId());
+        Admin admin = adminService.findAdminByLoginId(loginId);
 
         RequestUtil.checkNeedValue(
                 centerRegisterRequestDto.getDirectorLoginId(),
