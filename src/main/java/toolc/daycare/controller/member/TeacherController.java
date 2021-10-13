@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toolc.daycare.authentication.Auth;
+import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
@@ -63,21 +64,22 @@ public class TeacherController {
       loginRequestDto.getPassword()
     );
 
-    Teacher loginTeacher = teacherService.login(
+    TokenVO token = teacherService.login(
       loginRequestDto.getLoginId(),
       loginRequestDto.getPassword(),
       loginRequestDto.getExpoToken()
     );
 
-    BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
+    ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
   }
 
-//  @PostMapping("/message/sendClass")
-//  public ResponseEntity<?> sendClass(@Auth String loginId, @RequestBody MessageSendRequestDto dto) {
-//    FcmSendBody fcm = teacherService.sendMessage(String loginId, dto);
-//
-//    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", fcm);
-//    return ResponseEntity.ok(responseBody);
-//  }
+  @PostMapping("/message/sendClass")
+  public ResponseEntity<?> sendClass(@Auth String loginId, @RequestBody MessageSendRequestDto dto) {
+    log.info(loginId);
+    FcmSendBody fcm = teacherService.sendMessage(loginId, dto);
+
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
 }

@@ -86,7 +86,8 @@ public class DirectorController {
   }
 
   @PostMapping("/registerCenter")
-  public ResponseEntity<?> DirectorRegisterCenter(@RequestBody DirectorRegisterCenterRequestDto directorRegisterCenterRequestDto) {
+  public ResponseEntity<?> DirectorRegisterCenter(@Auth String loginId, @RequestBody DirectorRegisterCenterRequestDto directorRegisterCenterRequestDto) {
+    log.info("loginId = {}", loginId);
     RequestUtil.checkNeedValue(
       directorRegisterCenterRequestDto.getCenterName(),
       directorRegisterCenterRequestDto.getCenterName(),
