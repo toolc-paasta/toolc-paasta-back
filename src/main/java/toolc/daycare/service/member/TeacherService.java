@@ -22,6 +22,7 @@ import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class TeacherService {
 
 
@@ -43,6 +45,9 @@ public class TeacherService {
   private final FcmSender fcmSender;
   private final PasswordEncoder passwordEncoder;
 
+  public Teacher findTeacherByLoginId(String loginId) {
+    return teacherRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+  }
 
   public Teacher signUp(String loginId, String password, String name, Sex sex) {
     memberService.checkDuplicateMember(loginId);

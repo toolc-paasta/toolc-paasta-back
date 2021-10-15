@@ -71,14 +71,14 @@ class ParentsControllerLoginTest extends ApiDocumentationTest {
     @Test
     @Order(1)
     @DisplayName("정상")
-    void correctDirectorLogin() throws Exception {
+    void correctDirectorLogin() throws Exception { // TODO: 해당 테스트 실패 -> 수정 필요
         //given
         LoginRequestDto requestDto = LoginRequestDto.builder()
                 .loginId(LOGIN_ID)
                 .password(PASSWORD)
                 .build();
 
-        given(parentsService.login(any(), any(), any())).willReturn(getCorrectDirector());
+//        given(parentsService.login(any(), any(), any())).willReturn(getCorrectDirector());
 
 
         //when

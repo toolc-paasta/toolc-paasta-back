@@ -8,10 +8,7 @@ import toolc.daycare.domain.group.Area;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Shuttle;
-import toolc.daycare.domain.member.Admin;
-import toolc.daycare.domain.member.Parents;
-import toolc.daycare.domain.member.Sex;
-import toolc.daycare.domain.member.Student;
+import toolc.daycare.domain.member.*;
 import toolc.daycare.repository.interfaces.group.AreaRepository;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
@@ -114,7 +111,7 @@ public class TestController {
                 .sex(Sex.WOMAN)
                 .password(passwordEncoder.encode("1234"))
                 .build();
-        admin.setExpoToken("ExponentPushToken[BjCfGWEn9W4MyIfi87FAry]");
+        admin.setExpoToken("ExponentPushToken[MA3md0J91_qEwmUonu2BQQ]");
         adminRepository.save(admin);
 
 
