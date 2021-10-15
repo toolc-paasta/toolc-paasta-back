@@ -12,14 +12,12 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DirectorRegisterCenterRequestDto {
 
-    private String loginId;
     private String centerName;
     private String address;
     private LocalDate foundationDate;
 
     @Builder
-    public DirectorRegisterCenterRequestDto(String loginId, String centerName, String address, LocalDate foundationDate) {
-        this.loginId = loginId;
+    public DirectorRegisterCenterRequestDto(String centerName, String address, LocalDate foundationDate) {
         this.centerName = centerName;
         this.address = address;
         this.foundationDate = foundationDate;

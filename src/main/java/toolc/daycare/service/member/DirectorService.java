@@ -16,11 +16,13 @@ import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 public class DirectorService {
 
     private final MemberService memberService;
@@ -64,8 +66,7 @@ public class DirectorService {
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
 
-        director.setExpoToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
-        directorRepository.save(director);
+        director.setExpoToken(expoToken);
 
         AccessToken accessToken = tokenService.create(loginId, director.getAuthority());
 
