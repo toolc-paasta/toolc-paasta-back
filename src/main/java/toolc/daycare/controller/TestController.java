@@ -111,7 +111,7 @@ public class TestController {
                 .sex(Sex.WOMAN)
                 .password(passwordEncoder.encode("1234"))
                 .build();
-        admin.setExpoToken("ExponentPushToken[MA3md0J91_qEwmUonu2BQQ]");
+        admin.setExpoToken("ExponentPushToken[BjCfGWEn9W4MyIfi87FAry]");
         adminRepository.save(admin);
 
 

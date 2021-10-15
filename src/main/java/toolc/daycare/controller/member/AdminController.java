@@ -91,5 +91,4 @@ public class AdminController {
     ResponseDto<Center> responseBody = new ResponseDto<>(OK.value(), "요청 수락", newCenter);
     return ResponseEntity.ok(responseBody);
   }
-
 }

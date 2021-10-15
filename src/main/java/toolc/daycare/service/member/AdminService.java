@@ -10,9 +10,7 @@ import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
-
 import javax.transaction.Transactional;
-
 
 @Slf4j
 @Service

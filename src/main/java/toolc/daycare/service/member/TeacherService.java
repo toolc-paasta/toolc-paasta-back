@@ -21,7 +21,6 @@ import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
-
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.LinkedList;

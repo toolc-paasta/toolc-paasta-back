@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
-import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
@@ -82,7 +81,6 @@ public class TeacherController {
 
     ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
-
 //        Teacher loginTeacher = teacherService.login(
 //                loginRequestDto.getLoginId(),
 //                loginRequestDto.getPassword()
@@ -90,7 +88,7 @@ public class TeacherController {
 //
 //        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
 //        return ResponseEntity.ok(responseBody);
-  }
+    }
 
   @PostMapping("/registerClass")
   public ResponseEntity<?> registerClass(@Auth String loginId, @RequestBody RegisterClassRequestDto dto) {
