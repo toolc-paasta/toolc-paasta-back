@@ -34,11 +34,11 @@ public class DirectorController {
     this.directorService = directorService;
   }
 
-  @GetMapping // Test용도
+  @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
     Director director = directorService.findDirectorByLoginId(loginId);
 
-    ResponseDto<Director> response = new ResponseDto<>(OK.value(), "정보 가져오기 성공", director);
+    ResponseDto<Director> response = new ResponseDto<>(OK.value(), "정보 조회 성공", director);
 
     return ResponseEntity.ok(response);
   }
@@ -64,7 +64,7 @@ public class DirectorController {
       directorSignupRequestDto.getSex()
     );
 
-    BaseResponseSuccessDto responseBody = new DirectorSignupResponseDto(newDirector);
+    ResponseDto<Director> responseBody = new ResponseDto<>(OK.value(), "회원가입 성공", newDirector);
     return new ResponseEntity<>(responseBody, CREATED);
   }
 
@@ -90,17 +90,16 @@ public class DirectorController {
     log.info("loginId = {}", loginId);
     RequestUtil.checkNeedValue(
       directorRegisterCenterRequestDto.getCenterName(),
-      directorRegisterCenterRequestDto.getCenterName(),
       directorRegisterCenterRequestDto.getAddress(),
       directorRegisterCenterRequestDto.getFoundationDate()
     );
 
-    FcmSendBody fcm = directorService.centerRegister(directorRegisterCenterRequestDto.getLoginId(),
+    FcmSendBody fcm = directorService.centerRegister(loginId,
       directorRegisterCenterRequestDto.getCenterName(),
       directorRegisterCenterRequestDto.getAddress(),
       directorRegisterCenterRequestDto.getFoundationDate());
 
-    BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "요청 전송 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
 }

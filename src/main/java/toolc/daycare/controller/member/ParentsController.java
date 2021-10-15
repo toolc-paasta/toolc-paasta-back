@@ -3,18 +3,21 @@ package toolc.daycare.controller.member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import toolc.daycare.authentication.Auth;
+import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.dto.BaseResponseSuccessDto;
+import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
 import toolc.daycare.dto.member.response.parents.ParentsLoginResponseDto;
 import toolc.daycare.dto.member.response.parents.ParentsSignupResponseDto;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestController
@@ -26,6 +29,15 @@ public class ParentsController {
   @Autowired
   public ParentsController(ParentsService parentsService) {
     this.parentsService = parentsService;
+  }
+
+  @GetMapping
+  public ResponseEntity<?> getInfo(@Auth String loginId) {
+    Parents parents = parentsService.findParentsByLoginId(loginId);
+
+    ResponseDto<Parents> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parents);
+
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/signup")
@@ -52,24 +64,24 @@ public class ParentsController {
       parentsSignupRequestDto.getChildSex()
     );
 
-    BaseResponseSuccessDto responseBody = new ParentsSignupResponseDto(newParents);
-    return ResponseEntity.ok(newParents);
+    ResponseDto<Parents> responseBody = new ResponseDto<>(OK.value(), "회원가입 성공", newParents);
+    return ResponseEntity.ok(responseBody);
   }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
-        RequestUtil.checkNeedValue(
-                loginRequestDto.getLoginId(),
-                loginRequestDto.getPassword()
-        );
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+    RequestUtil.checkNeedValue(
+      loginRequestDto.getLoginId(),
+      loginRequestDto.getPassword()
+    );
 
-    Parents loginParents = parentsService.login(
+    TokenVO token = parentsService.login(
       loginRequestDto.getLoginId(),
       loginRequestDto.getPassword(),
       loginRequestDto.getExpoToken()
     );
 
-    BaseResponseSuccessDto responseBody = new ParentsLoginResponseDto(loginParents);
+    ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
   }
 
