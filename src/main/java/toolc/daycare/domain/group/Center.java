@@ -29,7 +29,7 @@ public class Center extends BaseEntity {
     private Long star;
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "director_id")
     private Director director;
 

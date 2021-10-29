@@ -17,14 +17,11 @@ import static toolc.daycare.domain.member.Authority.DIRECTOR;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Director extends MemberBaseEntity{
 
-    @OneToOne
-    @JoinColumn(name = "center_id")
+    @OneToOne(mappedBy = "director")
     private Center center;
 
     @Builder
     public Director(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
-        super(loginId, password, name, connectionNumber, token, sex, DIRECTOR);
+      super(loginId, password, name, connectionNumber, token, sex, DIRECTOR);
     }
-
-
 }
