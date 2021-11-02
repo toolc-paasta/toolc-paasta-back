@@ -11,6 +11,7 @@ import toolc.daycare.exception.AlreadyMatchCenterException;
 import toolc.daycare.exception.NoExistCenterException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
+import toolc.daycare.vo.CenterVO;
 import toolc.daycare.vo.ClassVO;
 
 import java.time.LocalDate;
@@ -23,35 +24,36 @@ public class CenterService {
   private final CenterRepository centerRepository;
   private final ClassRepository classRepository;
 
-  public Center register(Director director,
-                         String name, String address, LocalDate foundationDate) {
-    checkNotExistCenter(director);
+  public CenterVO register(Director director,
+                           String name, String address, LocalDate foundationDate) {
     Center center = Center.builder()
       .name(name)
       .address(address)
       .foundationDate(foundationDate)
+      .channelName(director.getLoginId() + '_' + name)
       .build();
     center.setDirector(director);
 
-    return centerRepository.save(center);
-  }
+    centerRepository.save(center);
 
-  private void checkNotExistCenter(Director director) {
-
-    if (centerRepository.findByDirectorId(director.getId()) != null) {
-      throw new AlreadyMatchCenterException();
-    }
+    return CenterVO.builder()
+      .name(center.getName())
+      .channelName(center.getChannelName())
+      .star(0L)
+      .directorName(director.getName())
+      .address(center.getAddress())
+      .foundationDate(center.getFoundationDate())
+      .build();
   }
 
   public ClassVO createClass(Center center, String name) {
     Class aClass = Class.builder()
-      .channelName(center.getDirector() .getLoginId()+ '_' + name)
       .name(name)
       .build();
     aClass.setCenter(center);
 
     classRepository.save(aClass);
 
-    return new ClassVO(aClass.getName(), aClass.getChannelName());
+    return new ClassVO(center.getName(), aClass.getName());
   }
 }

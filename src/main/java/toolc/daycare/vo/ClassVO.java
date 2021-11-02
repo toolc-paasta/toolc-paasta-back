@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class ClassVO {
-  String name;
-  String channelName;
+  String centerName;
+  String className;
 }

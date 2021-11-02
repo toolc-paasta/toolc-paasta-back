@@ -10,7 +10,10 @@ import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
+import toolc.daycare.vo.CenterVO;
 import toolc.daycare.vo.ClassVO;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,13 +33,36 @@ class CenterServiceTest {
   CenterService centerService;
 
   @Test
+  void 센터생성() {
+    // given
+    String name = "center001";
+    String address = "address001";
+    LocalDate foundationDate = LocalDate.of(1998, 02, 25);
+    CenterVO target = CenterVO.builder()
+      .directorName(director().build().getName())
+      .star(0L)
+      .channelName(director().build().getLoginId() + '_' + name)
+      .foundationDate(foundationDate)
+      .address(address)
+      .name(name)
+      .build();
+
+    given(centerRepository.save(any())).willReturn(any());
+
+    // when
+    CenterVO centerVO = centerService.register(director().build(), name, address, foundationDate);
+
+    // then
+    assertThat(centerVO, is(target));
+  }
+
+  @Test
   void 반생성() {
     // given
     Center center = center().build();
     center.setDirector(director().build());
     String name = "class001";
-    String channelName = center.getDirector().getLoginId() + '_' + name;
-    ClassVO target = new ClassVO(name, channelName);
+    ClassVO target = new ClassVO(center.getName(), name);
     given(classRepository.save(any())).willReturn(any());
 
     // when
