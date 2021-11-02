@@ -25,12 +25,9 @@ public class Class extends BaseEntity {
   @JoinColumn(name = "center_id")
   private Center center;
 
-  private String channelName;
-
   @Builder
-  public Class(String name, String channelName) {
+  public Class(String name) {
     this.name = name;
-    this.channelName = channelName;
   }
 
   public void setCenter(Center center) {

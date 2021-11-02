@@ -2,10 +2,6 @@ spring:
   profiles:
     active: local
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-
 logging:
   level:
     org.hibernate.SQL: debug

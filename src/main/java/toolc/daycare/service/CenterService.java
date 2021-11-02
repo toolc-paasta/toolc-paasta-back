@@ -45,13 +45,12 @@ public class CenterService {
 
   public ClassVO createClass(Center center, String name) {
     Class aClass = Class.builder()
-      .channelName(center.getDirector() .getLoginId()+ '_' + name)
       .name(name)
       .build();
     aClass.setCenter(center);
 
     classRepository.save(aClass);
 
-    return new ClassVO(aClass.getName(), aClass.getChannelName());
+    return new ClassVO(center.getName(), aClass.getName());
   }
 }

@@ -35,8 +35,7 @@ class CenterServiceTest {
     Center center = center().build();
     center.setDirector(director().build());
     String name = "class001";
-    String channelName = center.getDirector().getLoginId() + '_' + name;
-    ClassVO target = new ClassVO(name, channelName);
+    ClassVO target = new ClassVO(center.getName(), name);
     given(classRepository.save(any())).willReturn(any());
 
     // when
