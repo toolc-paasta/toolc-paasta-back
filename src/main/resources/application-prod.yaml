@@ -1,0 +1,7 @@
+spring:
+
+  datasource:
+    url: jdbc:mysql://stmap-db.cmmvoxpb1x2s.ap-northeast-2.rds.amazonaws.com:3306/stmap_db?serverTimezone=UTC&characterEncoding=UTF-8
+    username: admin
+    password: qwer12345!
+    driver-class-name: com.mysql.cj.jdbc.Driver

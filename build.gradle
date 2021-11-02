@@ -50,7 +50,12 @@ dependencies {
 
 	//orm
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.4'
-	runtimeOnly 'com.h2database:h2:1.4.200'
+
+  //h2
+  runtimeOnly 'com.h2database:h2:1.4.200'
+
+  //mysql
+  implementation 'mysql:mysql-connector-java'
 
 	//lombok
 	compileOnly 'org.projectlombok:lombok:1.18.20'
