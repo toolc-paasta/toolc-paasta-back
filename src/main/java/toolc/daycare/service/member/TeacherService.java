@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
-import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.member.*;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
-import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
@@ -21,11 +19,10 @@ import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
+import toolc.daycare.vo.ParentVO;
+
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -72,7 +69,7 @@ public class TeacherService {
     return tokenService.formatting(accessToken);
   }
 
-  public FcmSendBody registerClass(String loginId, RegisterClassRequestDto dto){
+  public FcmSendBody registerClass(String loginId, RegisterClassRequestDto dto) {
     Teacher teacher = teacherRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
 
@@ -96,7 +93,7 @@ public class TeacherService {
 
 
     FcmSendBody fcmSendBody = fcmSender.sendFcmJson(title, body, targetUser, data);
-    log.info("fcm = {}" , fcmSendBody);
+    log.info("fcm = {}", fcmSendBody);
     return null;
 
   }
@@ -105,7 +102,6 @@ public class TeacherService {
   public FcmSendBody sendMessage(String loginId, MessageSendRequestDto dto) {
     Teacher teacher = teacherRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
-
     List<String> targetUser = new LinkedList<>();
 
     Class targetClass = teacher.getAClass();
@@ -116,7 +112,23 @@ public class TeacherService {
     Map<String, Object> data = new HashMap<>();
     data.put("temp", "temp");
 
-    return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(),targetUser, data);
+    return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(), targetUser, data);
+  }
 
+  public List<ParentVO> findParents(List<Student> students) { // 무조건 테스트가 필요해보이는데... entity관계를 바꿔야해서..흠..
+    List<ParentVO> parents = new ArrayList<>();
+    students.forEach(s -> {
+      s.getParents().forEach(p -> {
+        parents.add(ParentVO.builder()
+          .name(p.getName())
+          .sex(p.getSex())
+          .loginId(p.getLoginId())
+          .childId(s.getId())
+          .childName(p.getChildName())
+          .childSex(s.getSex())
+          .build());
+      });
+    });
+    return parents;
   }
 }

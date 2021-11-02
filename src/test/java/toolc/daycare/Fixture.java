@@ -9,9 +9,7 @@ import toolc.daycare.authentication.time.ConstantTime;
 import toolc.daycare.authentication.time.CurrentTimeServer;
 import toolc.daycare.authentication.time.RealTime;
 import toolc.daycare.domain.group.Center;
-import toolc.daycare.domain.member.Authority;
-import toolc.daycare.domain.member.Director;
-import toolc.daycare.domain.member.Sex;
+import toolc.daycare.domain.member.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,5 +61,23 @@ public class Fixture {
       .foundationDate(LocalDate.of(1998, 2, 25))
       .address("집")
       .name("center001");
+  }
+
+  public static Teacher.TeacherBuilder teacher() {
+    return Teacher.builder()
+      .connectionNumber("010-1111-2222")
+      .loginId("teacher001")
+      .name("teacher")
+      .password("password001")
+      .sex(Sex.MAN)
+      .token("token001");
+  }
+
+  public static Student.StudentBuilder student() {
+    return Student.builder()
+      .name("student001")
+      .sex(Sex.MAN)
+      .age(10)
+      .connectionNumber("010-0000-0000");
   }
 }

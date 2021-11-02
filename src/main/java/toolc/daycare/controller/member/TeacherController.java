@@ -1,26 +1,25 @@
 package toolc.daycare.controller.member;
 
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toolc.daycare.domain.member.Director;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Teacher;
-import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
-import toolc.daycare.dto.member.response.teacher.TeacherLoginResponseDto;
-import toolc.daycare.dto.member.response.teacher.TeacherSignupResponseDto;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
+import toolc.daycare.vo.ParentVO;
 
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
@@ -88,7 +87,7 @@ public class TeacherController {
 //
 //        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
 //        return ResponseEntity.ok(responseBody);
-    }
+  }
 
   @PostMapping("/registerClass")
   public ResponseEntity<?> registerClass(@Auth String loginId, @RequestBody RegisterClassRequestDto dto) {
@@ -106,6 +105,21 @@ public class TeacherController {
     FcmSendBody fcm = teacherService.sendMessage(loginId, dto);
 
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "담당 반 부모님 메시지 보내기 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/read")
+  public ResponseEntity<?> findParents(@Auth String loginId) {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+
+    if (teacher.getAClass() == null) {
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "선생님의 반이 없습니다.", null);
+      return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    List<ParentVO> parents = teacherService.findParents(teacher.getAClass().getStudents());
+
+    ResponseDto<List<ParentVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", parents);
     return ResponseEntity.ok(responseBody);
   }
 }
