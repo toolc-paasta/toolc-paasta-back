@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
@@ -109,7 +110,7 @@ public class DirectorController {
   }
 
   @GetMapping("/request/registerClass")
-  public ResponseEntity<?> DirectorRegisterCenter(@Auth String loginId) {
+  public ResponseEntity<?> findAllRequest(@Auth String loginId) {
     log.info("loginId = {}", loginId);
 
 
@@ -117,6 +118,17 @@ public class DirectorController {
 
     ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
       OK.value(), "Class 등록 신청 조회 완료", allRegisters);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("request/allowRegister/{messageId}")
+  public ResponseEntity<?> allowRequest(@Auth String loginId, @PathVariable Long messageId) {
+    log.info("loginId = {}", loginId);
+
+    Teacher teacher = directorService.allowRegister(messageId);
+
+    ResponseDto<Teacher> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 성공", teacher);
     return ResponseEntity.ok(responseBody);
   }
 }

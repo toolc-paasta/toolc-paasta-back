@@ -1,9 +1,6 @@
 package toolc.daycare.domain.member;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import toolc.daycare.domain.group.Class;
 
 
@@ -20,6 +17,7 @@ public class Teacher extends MemberBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "class_id")
+    @Setter
     private Class aClass;
 
     @Builder
@@ -28,4 +26,5 @@ public class Teacher extends MemberBaseEntity {
         super(loginId, password, name, connectionNumber, expoToken, sex);
         this.role = role;
     }
+
 }

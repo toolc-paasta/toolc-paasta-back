@@ -33,10 +33,6 @@ public class Center extends BaseEntity {
     @JoinColumn(name = "director_id")
     private Director director;
 
-
-    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
-    private List<Class> classes = new ArrayList<>();
-
 //    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
 //    private List<Teacher> teachers = new ArrayList<>();
 
