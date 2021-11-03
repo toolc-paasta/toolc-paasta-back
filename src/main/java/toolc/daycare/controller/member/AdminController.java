@@ -1,19 +1,16 @@
 package toolc.daycare.controller.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
-import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
-import toolc.daycare.dto.group.request.center.CenterRegisterRequestDto;
-import toolc.daycare.dto.group.response.center.CenterRegisterResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.response.admin.AdminLoginResponseDto;
 import toolc.daycare.service.CenterService;
@@ -26,6 +23,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/member/admin")
 public class AdminController {
@@ -34,15 +32,7 @@ public class AdminController {
   private final DirectorService directorService;
   private final CenterService centerService;
 
-  @Autowired
-  public AdminController(AdminService adminService,
-                         DirectorService directorService,
-                         CenterService centerService
-  ) {
-    this.adminService = adminService;
-    this.directorService = directorService;
-    this.centerService = centerService;
-  }
+
 
   @PostMapping("/login")
   public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
@@ -51,26 +41,40 @@ public class AdminController {
       loginRequestDto.getPassword()
     );
 
-    Admin loginAdmin = adminService.login(
+    TokenVO token = adminService.login(
       loginRequestDto.getLoginId(),
       loginRequestDto.getPassword(),
       loginRequestDto.getExpoToken()
     );
 
-    BaseResponseSuccessDto responseBody = new AdminLoginResponseDto(loginAdmin);
+    ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
   }
 
-  @PostMapping("allowCenter")
-  public ResponseEntity<?> allowCenter(@Auth String loginId, Long messageId) {
+  @PostMapping("allowCenter/{messageId}")
+  public ResponseEntity<?> allowCenter(@Auth String loginId, @PathVariable Long messageId) {
 
     //TODO : 나중에 권한으로 바꿔줘야함
     Admin admin = adminService.findAdminByLoginId(loginId);
 
-    Center newCenter = centerService.register(messageId);
+    Center newCenter = adminService.allowRegister(messageId);
 
     ResponseDto<Center> responseBody =
-      new ResponseDto<>(OK.value(), "Center 등록 요청 수락", newCenter);
+      new ResponseDto<>(OK.value(), "Center 등록 요청 수락 완료", newCenter);
+
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("rejectCenter/{messageId}")
+  public ResponseEntity<?> rejectCenter(@Auth String loginId, @PathVariable Long messageId) {
+
+    //TODO : 나중에 권한으로 바꿔줘야함
+    Admin admin = adminService.findAdminByLoginId(loginId);
+
+    adminService.rejectRegister(messageId);
+
+    ResponseDto<?> responseBody =
+      new ResponseDto<>(OK.value(), "Center 등록 요청 거절 완료", null);
 
     return ResponseEntity.ok(responseBody);
   }

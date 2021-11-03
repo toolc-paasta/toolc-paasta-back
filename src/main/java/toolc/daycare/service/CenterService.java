@@ -10,6 +10,7 @@ import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.exception.AlreadyMatchCenterException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
+import toolc.daycare.service.fcm.FcmSender;
 
 import java.time.LocalDate;
 
@@ -24,24 +25,6 @@ public class CenterService {
     private final CenterRegisterRepository registerRepository;
 
 
-    public Center register(Long messageId) {
-        CenterRegisterMessage allow = registerRepository.findById(messageId).get();
-        Center center = Center.builder()
-          .name(allow.getCenterName())
-          .address(allow.getAddress())
-          .foundationDate(allow.getFoundationDate())
-          .build();
-        checkNotExistCenter(allow.getDirector());
 
 
-
-        return centerRepository.save(center);
-    }
-
-
-    private void checkNotExistCenter(Director director){
-        if(centerRepository.findByDirectorId(director.getId()) != null){
-            throw new AlreadyMatchCenterException();
-        }
-    }
 }

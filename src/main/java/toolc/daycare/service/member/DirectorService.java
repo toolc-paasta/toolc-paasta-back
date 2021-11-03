@@ -69,7 +69,7 @@ public class DirectorService {
                 .orElseThrow(NotExistMemberException::new);
         memberService.checkLoginPassword(director, password);
 
-        director.setExpoToken("tokenTest"); // TODO: expo토큰은 클라에서 받아와야할 듯(요청에 추가해야할거 같음)
+        director.setExpoToken(expoToken);
         directorRepository.save(director);
 
         AccessToken accessToken = tokenService.create(loginId);

@@ -10,4 +10,5 @@ public interface CenterRegisterRepository {
     CenterRegisterMessage save(CenterRegisterMessage registerMessage);
     List<CenterRegisterMessage> findAll();
     Optional<CenterRegisterMessage> findById(Long id);
+    void deleteById(Long id);
 }
