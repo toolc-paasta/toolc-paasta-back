@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.message.CenterRegisterMessage;
+import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.fcm.FcmWebClient;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.DirectorRepository;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
+import toolc.daycare.repository.interfaces.message.TeacherRegisterClassRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
 import toolc.daycare.authentication.AccessToken;
@@ -32,6 +34,7 @@ public class DirectorService {
     private final FcmSender fcmSender;
     private final TokenService tokenService;
     private final CenterRegisterRepository centerRegisterRepository;
+    private final TeacherRegisterClassRepository teacherRegisterClassRepository;
 
     @Autowired
     public DirectorService(MemberService memberService,
@@ -41,7 +44,8 @@ public class DirectorService {
                            FcmWebClient fcmWebClient,
                            FcmSender fcmSender,
                            TokenService tokenService,
-                           CenterRegisterRepository centerRegisterRepository) {
+                           CenterRegisterRepository centerRegisterRepository,
+                           TeacherRegisterClassRepository teacherRegisterClassRepository) {
         this.memberService = memberService;
         this.adminRepository = adminRepository;
         this.directorRepository = directorRepository;
@@ -49,6 +53,7 @@ public class DirectorService {
         this.fcmSender = fcmSender;
         this.tokenService = tokenService;
         this.centerRegisterRepository = centerRegisterRepository;
+        this.teacherRegisterClassRepository = teacherRegisterClassRepository;
     }
 
     public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
@@ -100,6 +105,11 @@ public class DirectorService {
         // TODO : 메세지 보내는 사람도 필요하지 않을까?
         return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
 
+    }
+
+    public List<TeacherRegisterClassMessage> findAllRegisterRequest(){
+
+        return teacherRegisterClassRepository.findAll();
     }
 
 

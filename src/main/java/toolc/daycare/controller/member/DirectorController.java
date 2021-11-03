@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
@@ -18,6 +19,8 @@ import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.util.RequestUtil;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -100,7 +103,20 @@ public class DirectorController {
       directorRegisterCenterRequestDto.getAddress(),
       directorRegisterCenterRequestDto.getFoundationDate());
 
-    BaseResponseSuccessDto responseBody = new DirectorRegisterCenterDto(fcm);
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(
+      OK.value(), "Center 등록 신청 완료", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/request/registerClass")
+  public ResponseEntity<?> DirectorRegisterCenter(@Auth String loginId) {
+    log.info("loginId = {}", loginId);
+
+
+    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest();
+
+    ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
+      OK.value(), "Class 등록 신청 조회 완료", allRegisters);
     return ResponseEntity.ok(responseBody);
   }
 }
