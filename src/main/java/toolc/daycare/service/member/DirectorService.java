@@ -6,10 +6,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
+import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.fcm.FcmWebClient;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.DirectorRepository;
+import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
 import toolc.daycare.authentication.AccessToken;
@@ -29,6 +31,7 @@ public class DirectorService {
     private final PasswordEncoder passwordEncoder;
     private final FcmSender fcmSender;
     private final TokenService tokenService;
+    private final CenterRegisterRepository centerRegisterRepository;
 
     @Autowired
     public DirectorService(MemberService memberService,
@@ -37,13 +40,15 @@ public class DirectorService {
                            PasswordEncoder passwordEncoder,
                            FcmWebClient fcmWebClient,
                            FcmSender fcmSender,
-                           TokenService tokenService) {
+                           TokenService tokenService,
+                           CenterRegisterRepository centerRegisterRepository) {
         this.memberService = memberService;
         this.adminRepository = adminRepository;
         this.directorRepository = directorRepository;
         this.passwordEncoder = passwordEncoder;
         this.fcmSender = fcmSender;
         this.tokenService = tokenService;
+        this.centerRegisterRepository = centerRegisterRepository;
     }
 
     public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
@@ -88,6 +93,9 @@ public class DirectorService {
         data.put("address", address);
         data.put("foundationDate", foundationDate);
 
+        CenterRegisterMessage message = new CenterRegisterMessage(director, centerName, address,
+          foundationDate);
+        centerRegisterRepository.save(message);
 
         // TODO : 메세지 보내는 사람도 필요하지 않을까?
         return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
