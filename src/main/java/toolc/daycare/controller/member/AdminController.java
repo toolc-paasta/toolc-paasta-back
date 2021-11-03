@@ -62,27 +62,16 @@ public class AdminController {
   }
 
   @PostMapping("allowCenter")
-  public ResponseEntity<?> allowCenter(@Auth String loginId, @RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
+  public ResponseEntity<?> allowCenter(@Auth String loginId, Long messageId) {
 
     //TODO : 나중에 권한으로 바꿔줘야함
     Admin admin = adminService.findAdminByLoginId(loginId);
 
-    RequestUtil.checkNeedValue(
-      centerRegisterRequestDto.getDirectorLoginId(),
-      centerRegisterRequestDto.getCenterName(),
-      centerRegisterRequestDto.getAddress(),
-      centerRegisterRequestDto.getFoundationDate()
-    );
+    Center newCenter = centerService.register(messageId);
 
-    Director director = directorService.findDirectorByLoginId(centerRegisterRequestDto.getDirectorLoginId());
+    ResponseDto<Center> responseBody =
+      new ResponseDto<>(OK.value(), "Center 등록 요청 수락", newCenter);
 
-    Center newCenter = centerService.register(
-      director,
-      centerRegisterRequestDto.getCenterName(),
-      centerRegisterRequestDto.getAddress(),
-      centerRegisterRequestDto.getFoundationDate());
-
-    BaseResponseSuccessDto responseBody = new CenterRegisterResponseDto(newCenter);
     return ResponseEntity.ok(responseBody);
   }
 

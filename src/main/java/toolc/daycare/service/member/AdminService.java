@@ -3,13 +3,14 @@ package toolc.daycare.service.member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.exception.NotExistMemberException;
+import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,7 +41,7 @@ public class AdminService {
     return admin;
   }
 
-  public List<CenterRegisterMessage> getAllRegister(){
+  public List<CenterRegisterMessage> getAllRegister() {
     List<CenterRegisterMessage> registers = registerRepository.findAll();
 
     return registers;
