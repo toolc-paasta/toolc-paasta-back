@@ -38,8 +38,6 @@ public class Center extends BaseEntity {
   @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
   private List<Class> classes = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
-//    private List<Teacher> teachers = new ArrayList<>();
 
   @Builder
   public Center(String name, String address, LocalDate foundationDate, Long star, String channelName) {

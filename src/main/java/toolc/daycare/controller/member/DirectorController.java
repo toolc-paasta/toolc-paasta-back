@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.member.Teacher;
+import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.group.request.Class.CreateClassRequestDto;
@@ -24,6 +26,10 @@ import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
 
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
@@ -100,6 +106,42 @@ public class DirectorController {
       directorRegisterCenterRequestDto.getAddress(),
       directorRegisterCenterRequestDto.getFoundationDate());
 
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(
+      OK.value(), "Center 등록 신청 완료", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/request/registerClass")
+  public ResponseEntity<?> findAllRequest(@Auth String loginId) {
+    log.info("loginId = {}", loginId);
+
+
+    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest();
+
+    ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 요청 조회 성공", allRegisters);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("request/allowRegister/{messageId}")
+  public ResponseEntity<?> allowRequest(@Auth String loginId, @PathVariable Long messageId) {
+    log.info("loginId = {}", loginId);
+
+    Teacher teacher = directorService.allowRegister(messageId);
+
+    ResponseDto<Teacher> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 요청 수락 성공", teacher);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("request/rejectRegister/{messageId}")
+  public ResponseEntity<?> rejectRequest(@Auth String loginId, @PathVariable Long messageId) {
+    log.info("loginId = {}", loginId);
+
+    directorService.rejectRegister(messageId);
+
+    ResponseDto<?> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 요청 거절 성공", null);
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "요청 전송 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }

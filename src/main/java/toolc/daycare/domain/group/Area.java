@@ -22,9 +22,6 @@ public class Area extends BaseEntity {
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     private List<ShuttleArea> shuttles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
-    private List<Student> students = new ArrayList<>();
-
     @Builder
     public Area(String name) {
         this.name = name;

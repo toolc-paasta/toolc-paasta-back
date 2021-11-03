@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 public class FcmWebClient {
 
+
   @Bean
   public WebClient webClient() {
     return WebClient.builder()

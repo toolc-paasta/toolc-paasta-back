@@ -7,19 +7,25 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.exception.AlreadyMatchCenterException;
 import toolc.daycare.exception.NoExistCenterException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
+import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
+import toolc.daycare.service.fcm.FcmSender;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.vo.CenterVO;
 import toolc.daycare.vo.ClassVO;
 
 import java.time.LocalDate;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CenterService {
+
 
   private final CenterRepository centerRepository;
   private final ClassRepository classRepository;

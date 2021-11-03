@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
-import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.member.*;
 import toolc.daycare.exception.NotExistMemberException;
@@ -19,6 +18,7 @@ import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
+import toolc.daycare.repository.interfaces.message.TeacherRegisterClassRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
 import javax.transaction.Transactional;
@@ -43,6 +43,9 @@ public class TeacherService {
   private final CenterRepository centerRepository;
   private final FcmSender fcmSender;
   private final PasswordEncoder passwordEncoder;
+  private final TeacherRegisterClassRepository registerClassRepository;
+
+
 
   public Teacher findTeacherByLoginId(String loginId) {
     return teacherRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
@@ -72,11 +75,10 @@ public class TeacherService {
     return tokenService.formatting(accessToken);
   }
 
-  public FcmSendBody registerClass(String loginId, RegisterClassRequestDto dto){
+  public FcmSendBody registerClass(String loginId, RegisterClassRequestDto dto) {
     Teacher teacher = teacherRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
 
-    List<String> targetUser = new LinkedList<>();
     Long centerId = centerRepository.findByName(dto.getCenterName()).getId();
     Class registerClass = classRepository.findByNameAndCenterId(dto.getClassName(), centerId);
 
@@ -88,16 +90,17 @@ public class TeacherService {
     Map<String, Object> data = new HashMap<>();
     data.put("temp", "temp");
 
-    log.info("test");
-    log.info("center = {}", registerClass.getCenter());
-    log.info("director = {}", registerClass.getCenter().getDirector());
-    log.info("dir loginId = {}", registerClass.getCenter().getDirector().getLoginId());
+    List<String> targetUser = new LinkedList<>();
+    //Todo :: 예외 처리 못해줌 - 정상 입력 아닐 경우
     targetUser.add(registerClass.getCenter().getDirector().getLoginId());
 
-
     FcmSendBody fcmSendBody = fcmSender.sendFcmJson(title, body, targetUser, data);
-    log.info("fcm = {}" , fcmSendBody);
-    return null;
+
+    TeacherRegisterClassMessage registerClassMessage = new TeacherRegisterClassMessage(
+      teacher, centerId, registerClass.getId());
+    registerClassRepository.save(registerClassMessage);
+
+    return fcmSendBody;
 
   }
 
@@ -116,7 +119,7 @@ public class TeacherService {
     Map<String, Object> data = new HashMap<>();
     data.put("temp", "temp");
 
-    return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(),targetUser, data);
+    return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(), targetUser, data);
 
   }
 }
