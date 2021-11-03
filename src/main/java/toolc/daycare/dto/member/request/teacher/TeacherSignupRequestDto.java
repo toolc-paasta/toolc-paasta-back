@@ -10,16 +10,19 @@ import toolc.daycare.domain.member.Sex;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeacherSignupRequestDto {
 
-    private String loginId;
-    private String password;
-    private String name;
-    private Sex sex;
+  private String loginId;
+  private String password;
+  private String name;
+  private String connectionNumber;
+  private Sex sex;
 
-    @Builder
-    public TeacherSignupRequestDto(String loginId, String password, String name, Sex sex) {
-        this.loginId = loginId;
-        this.password = password;
-        this.name = name;
-        this.sex = sex;
-    }
+  @Builder
+  public TeacherSignupRequestDto(String loginId, String password, String name,
+                                 String connectionNumber, Sex sex) {
+    this.loginId = loginId;
+    this.password = password;
+    this.name = name;
+    this.connectionNumber = connectionNumber;
+    this.sex = sex;
+  }
 }

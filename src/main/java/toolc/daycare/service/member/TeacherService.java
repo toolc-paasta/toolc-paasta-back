@@ -68,12 +68,14 @@ public class TeacherService {
     this.registerClassRepository = registerClassRepository;
   }
 
-  public Teacher signUp(String loginId, String password, String name, Sex sex) {
+  public Teacher signUp(String loginId, String password, String name,
+                        String connectionNumber, Sex sex) {
     memberService.checkDuplicateMember(loginId);
     Teacher teacher = Teacher.builder()
       .loginId(loginId)
       .password(passwordEncoder.encode(password))
       .name(name)
+      .connectionNumber(connectionNumber)
       .sex(sex)
       .build();
 

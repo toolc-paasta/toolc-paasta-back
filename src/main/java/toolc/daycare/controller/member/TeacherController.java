@@ -41,7 +41,9 @@ public class TeacherController {
   public ResponseEntity<?> signUp(@RequestBody TeacherSignupRequestDto teacherSignupRequestDto) {
     RequestUtil.checkNeedValue(
       teacherSignupRequestDto.getLoginId(),
+      teacherSignupRequestDto.getName(),
       teacherSignupRequestDto.getPassword(),
+      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getName()
     );
     RequestUtil.checkCorrectEnum(
@@ -52,6 +54,7 @@ public class TeacherController {
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
       teacherSignupRequestDto.getName(),
+      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getSex()
     );
 

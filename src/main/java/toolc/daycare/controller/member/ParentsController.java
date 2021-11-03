@@ -34,6 +34,7 @@ public class ParentsController {
       parentsSignupRequestDto.getLoginId(),
       parentsSignupRequestDto.getPassword(),
       parentsSignupRequestDto.getName(),
+      parentsSignupRequestDto.getConnectionNumber(),
       parentsSignupRequestDto.getChildName(),
       parentsSignupRequestDto.getChildBirthday()
     );
@@ -47,6 +48,7 @@ public class ParentsController {
       parentsSignupRequestDto.getPassword(),
       parentsSignupRequestDto.getName(),
       parentsSignupRequestDto.getSex(),
+      parentsSignupRequestDto.getConnectionNumber(),
       parentsSignupRequestDto.getChildName(),
       parentsSignupRequestDto.getChildBirthday(),
       parentsSignupRequestDto.getChildSex()
