@@ -117,7 +117,7 @@ public class DirectorController {
     List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest();
 
     ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
-      OK.value(), "Class 등록 신청 조회 완료", allRegisters);
+      OK.value(), "Teacher Class 등록 요청 조회 성공", allRegisters);
     return ResponseEntity.ok(responseBody);
   }
 
@@ -128,7 +128,18 @@ public class DirectorController {
     Teacher teacher = directorService.allowRegister(messageId);
 
     ResponseDto<Teacher> responseBody = new ResponseDto<>(
-      OK.value(), "Teacher Class 등록 성공", teacher);
+      OK.value(), "Teacher Class 등록 요청 수락 성공", teacher);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("request/rejectRegister/{messageId}")
+  public ResponseEntity<?> rejectRequest(@Auth String loginId, @PathVariable Long messageId) {
+    log.info("loginId = {}", loginId);
+
+    directorService.rejectRegister(messageId);
+
+    ResponseDto<?> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 요청 거절 성공", null);
     return ResponseEntity.ok(responseBody);
   }
 }

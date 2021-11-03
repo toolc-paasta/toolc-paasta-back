@@ -127,7 +127,12 @@ public class DirectorService {
     teacher.setAClass(classRepository.findById(message.getClassId()).get());
 
     teacherRepository.save(teacher);
+    teacherRegisterClassRepository.deleteById(messageId);
     return teacher;
+  }
+
+  public void rejectRegister(Long messageId) {
+    teacherRegisterClassRepository.deleteById(messageId);
   }
 
 
