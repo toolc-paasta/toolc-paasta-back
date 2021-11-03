@@ -6,17 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
+
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
+import toolc.daycare.dto.group.request.center.CenterRegisterRequestDto;
+
 import toolc.daycare.dto.member.request.LoginRequestDto;
-import toolc.daycare.dto.member.response.admin.AdminLoginResponseDto;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.member.AdminService;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.util.RequestUtil;
+import toolc.daycare.vo.CenterVO;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
 
@@ -34,8 +40,18 @@ public class AdminController {
 
 
 
+
+  @GetMapping
+  public ResponseEntity<?> getInfo(@Auth String loginId) {
+    Admin admin = adminService.findAdminByLoginId(loginId);
+
+    ResponseDto<Admin> response = new ResponseDto<>(OK.value(), "정보 조회 성공", admin);
+
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping("/login")
-  public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
+  public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
     RequestUtil.checkNeedValue(
       loginRequestDto.getLoginId(),
       loginRequestDto.getPassword()
@@ -86,6 +102,7 @@ public class AdminController {
 
     ResponseDto<List<CenterRegisterMessage>> responseBody =
       new ResponseDto<>(OK.value(), "모든 요청 조회", registers);
+
 
     return ResponseEntity.ok(responseBody);
   }

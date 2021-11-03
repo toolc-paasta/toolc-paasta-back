@@ -17,6 +17,7 @@ import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
 import toolc.daycare.service.fcm.FcmSender;
+import javax.transaction.Transactional;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AdminService {
 
   private final MemberService memberService;
@@ -38,17 +40,16 @@ public class AdminService {
 
 
   public TokenVO login(String loginId, String password, String expoToken) {
-    Admin admin = findAdminByLoginId(loginId);
-    memberService.checkLoginPassword(admin, password);
+      Admin admin = findAdminByLoginId(loginId);
+      memberService.checkLoginPassword(admin, password);
 
-    admin.setExpoToken(expoToken);
-    adminRepository.save(admin);
+      admin.setExpoToken(expoToken);
 
-    AccessToken accessToken = tokenService.create(loginId);
+      AccessToken accessToken = tokenService.create(loginId, admin.getAuthority());
 
-    return tokenService.formatting(accessToken);
+      return tokenService.formatting(accessToken);
   }
-
+  
   public List<CenterRegisterMessage> getAllRegister() {
     List<CenterRegisterMessage> registers = registerRepository.findAll();
 

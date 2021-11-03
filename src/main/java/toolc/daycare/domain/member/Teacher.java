@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import static toolc.daycare.domain.member.Authority.TEACHER;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,10 +23,9 @@ public class Teacher extends MemberBaseEntity {
     private Class aClass;
 
     @Builder
-    public Teacher(String loginId, String password, String name, String connectionNumber,
-                   String expoToken, Sex sex, String role) {
-        super(loginId, password, name, connectionNumber, expoToken, sex);
-        this.role = role;
+
+    public Teacher(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
+        super(loginId, password, name, connectionNumber, token, sex, TEACHER);
     }
 
 }

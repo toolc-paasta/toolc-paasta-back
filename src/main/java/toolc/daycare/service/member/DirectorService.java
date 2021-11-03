@@ -23,11 +23,13 @@ import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 public class DirectorService {
 
   private final MemberService memberService;
@@ -77,19 +79,20 @@ public class DirectorService {
 
     return directorRepository.save(director);
   }
+  
+  
 
-  public TokenVO login(String loginId, String password, String expoToken) {
-    Director director = directorRepository.findByLoginId(loginId)
-      .orElseThrow(NotExistMemberException::new);
-    memberService.checkLoginPassword(director, password);
+    public TokenVO login(String loginId, String password, String expoToken) {
+        Director director = directorRepository.findByLoginId(loginId)
+                .orElseThrow(NotExistMemberException::new);
+        memberService.checkLoginPassword(director, password);
 
-    director.setExpoToken(expoToken);
-    directorRepository.save(director);
+        director.setExpoToken(expoToken);
 
-    AccessToken accessToken = tokenService.create(loginId);
+        AccessToken accessToken = tokenService.create(loginId, director.getAuthority());
 
-    return tokenService.formatting(accessToken);
-  }
+        return tokenService.formatting(accessToken);
+    }
 
   public FcmSendBody centerRegister(String loginId, String centerName, String address, LocalDate foundationDate) {
 
@@ -116,6 +119,7 @@ public class DirectorService {
 
   }
 
+  
   public List<TeacherRegisterClassMessage> findAllRegisterRequest() {
 
     return teacherRegisterClassRepository.findAll();
@@ -139,5 +143,6 @@ public class DirectorService {
   public Director findDirectorByLoginId(String loginId) {
     return directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
   }
+
 
 }

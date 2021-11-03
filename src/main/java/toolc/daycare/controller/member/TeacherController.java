@@ -4,10 +4,8 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import toolc.daycare.domain.member.Director;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Teacher;
@@ -37,6 +35,15 @@ public class TeacherController {
     this.teacherService = teacherService;
   }
 
+  @GetMapping
+  public ResponseEntity<?> getInfo(@Auth String loginId) {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+
+    ResponseDto<Teacher> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacher);
+
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping("/signup")
   public ResponseEntity<?> signUp(@RequestBody TeacherSignupRequestDto teacherSignupRequestDto) {
     RequestUtil.checkNeedValue(
@@ -55,12 +62,12 @@ public class TeacherController {
       teacherSignupRequestDto.getSex()
     );
 
-    BaseResponseSuccessDto responseBody = new TeacherSignupResponseDto(newTeacher);
+    ResponseDto<Teacher> responseBody = new ResponseDto<>(OK.value(), "회원가입 성공", newTeacher);
     return ResponseEntity.ok(responseBody);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> signUp(@RequestBody LoginRequestDto loginRequestDto) {
+  public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
     RequestUtil.checkNeedValue(
       loginRequestDto.getLoginId(),
       loginRequestDto.getPassword()
@@ -74,7 +81,14 @@ public class TeacherController {
 
     ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
-  }
+//        Teacher loginTeacher = teacherService.login(
+//                loginRequestDto.getLoginId(),
+//                loginRequestDto.getPassword()
+//        );
+//
+//        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
+//        return ResponseEntity.ok(responseBody);
+    }
 
   @PostMapping("/registerClass")
   public ResponseEntity<?> registerClass(@Auth String loginId, @RequestBody RegisterClassRequestDto dto) {

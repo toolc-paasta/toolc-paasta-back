@@ -18,33 +18,37 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Center extends BaseEntity {
 
-    private String name;
-    private String address;
+  private String name;
+  private String address;
+  private String channelName;
 
-//    @Temporal(TemporalType.DATE)
+  //    @Temporal(TemporalType.DATE)
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate foundationDate;
+  private LocalDate foundationDate;
 
-    private Long star;
+  private Long star = 0L;
 
 
-    @OneToOne
-    @JoinColumn(name = "director_id")
-    private Director director;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "director_id")
+  private Director director;
 
-//    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
-//    private List<Teacher> teachers = new ArrayList<>();
 
-    @Builder
-    public Center(String name, String address, LocalDate foundationDate, Long star) {
-        this.name = name;
-        this.address = address;
-        this.foundationDate = foundationDate;
-        this.star = star;
-    }
+  @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+  private List<Class> classes = new ArrayList<>();
 
-    public void setDirector(Director director) {
-        this.director = director;
-    }
+
+  @Builder
+  public Center(String name, String address, LocalDate foundationDate, Long star, String channelName) {
+    this.name = name;
+    this.address = address;
+    this.foundationDate = foundationDate;
+    this.star = star;
+    this.channelName = channelName;
+  }
+
+  public void setDirector(Director director) {
+    this.director = director;
+  }
 }

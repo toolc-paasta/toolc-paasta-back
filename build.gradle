@@ -18,7 +18,7 @@ configurations {
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
-
+/*
 bootJar {
 	dependsOn asciidoctor
 	copy {
@@ -26,6 +26,7 @@ bootJar {
 		into 'src/main/resources/static/docs'
 	}
 }
+*/
 
 
 repositories {
