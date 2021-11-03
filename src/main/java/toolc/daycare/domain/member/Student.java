@@ -10,6 +10,7 @@ import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Shuttle;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ import java.util.List;
 public class Student extends BaseEntity {
 
     private String name;
-    private Integer age;
-    private String connectionNumber;
+    private LocalDate birthday;
+//    private String connectionNumber;
 
     @Enumerated(value = EnumType.STRING)
     private Sex sex;
@@ -40,10 +41,10 @@ public class Student extends BaseEntity {
 
 
     @Builder
-    public Student(String name, Integer age, String connectionNumber, Sex sex) {
+    public Student(String name, LocalDate birthday, Sex sex) {
         this.name = name;
-        this.age = age;
-        this.connectionNumber = connectionNumber;
+        this.birthday = birthday;
+//        this.connectionNumber = connectionNumber;
         this.sex = sex;
     }
 

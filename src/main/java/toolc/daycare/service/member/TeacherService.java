@@ -12,7 +12,6 @@ import toolc.daycare.domain.member.*;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
-import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
@@ -21,19 +20,16 @@ import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.repository.interfaces.message.TeacherRegisterClassRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.fcm.FcmSender;
+import toolc.daycare.vo.ParentVO;
+
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class TeacherService {
-
-
   private final MemberService memberService;
   private final TokenService tokenService;
   private final TeacherRepository teacherRepository;
@@ -101,14 +97,12 @@ public class TeacherService {
     registerClassRepository.save(registerClassMessage);
 
     return fcmSendBody;
-
   }
 
 
   public FcmSendBody sendMessage(String loginId, MessageSendRequestDto dto) {
     Teacher teacher = teacherRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
-
     List<String> targetUser = new LinkedList<>();
 
     Class targetClass = teacher.getAClass();
@@ -120,6 +114,22 @@ public class TeacherService {
     data.put("temp", "temp");
 
     return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(), targetUser, data);
+  }
 
+  public List<ParentVO> findParents(List<Parents> parentsList) {
+    List<ParentVO> parents = new ArrayList<>();
+    parentsList.forEach(p -> {
+      parents.add(ParentVO.builder()
+        .name(p.getName())
+        .sex(p.getSex())
+        .connectionNumber(p.getConnectionNumber())
+        .loginId(p.getLoginId())
+        .childId(p.getStudent().getId())
+        .childName(p.getChildName())
+        .childSex(p.getStudent().getSex())
+        .childBirthday(p.getChildBirthday())
+        .build());
+    });
+    return parents;
   }
 }
