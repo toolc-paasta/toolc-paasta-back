@@ -20,7 +20,7 @@ import java.util.List;
 public class Student extends BaseEntity {
 
     private String name;
-    private LocalDate age;
+    private LocalDate birthday;
 //    private String connectionNumber;
 
     @Enumerated(value = EnumType.STRING)
@@ -44,9 +44,9 @@ public class Student extends BaseEntity {
 
 
     @Builder
-    public Student(String name, LocalDate age, Sex sex) {
+    public Student(String name, LocalDate birthday, Sex sex) {
         this.name = name;
-        this.age = age;
+        this.birthday = birthday;
 //        this.connectionNumber = connectionNumber;
         this.sex = sex;
     }

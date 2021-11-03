@@ -29,8 +29,6 @@ import java.util.*;
 @Service
 @Transactional
 public class TeacherService {
-
-
   private final MemberService memberService;
   private final TokenService tokenService;
   private final TeacherRepository teacherRepository;
@@ -115,19 +113,19 @@ public class TeacherService {
     return fcmSender.sendFcmJson(dto.getTitle(), dto.getBody(), targetUser, data);
   }
 
-  public List<ParentVO> findParents(List<Student> students) { // 무조건 테스트가 필요해보이는데... entity관계를 바꿔야해서..흠..
+  public List<ParentVO> findParents(List<Parents> parentsList) {
     List<ParentVO> parents = new ArrayList<>();
-    students.forEach(s -> {
-      s.getParents().forEach(p -> {
-        parents.add(ParentVO.builder()
-          .name(p.getName())
-          .sex(p.getSex())
-          .loginId(p.getLoginId())
-          .childId(s.getId())
-          .childName(p.getChildName())
-          .childSex(s.getSex())
-          .build());
-      });
+    parentsList.forEach(p -> {
+      parents.add(ParentVO.builder()
+        .name(p.getName())
+        .sex(p.getSex())
+        .connectionNumber(p.getConnectionNumber())
+        .loginId(p.getLoginId())
+        .childId(p.getStudent().getId())
+        .childName(p.getChildName())
+        .childSex(p.getStudent().getSex())
+        .childBirthday(p.getChildBirthday())
+        .build());
     });
     return parents;
   }

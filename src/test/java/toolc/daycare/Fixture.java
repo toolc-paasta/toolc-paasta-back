@@ -73,11 +73,23 @@ public class Fixture {
       .token("token001");
   }
 
+  public static Parents.ParentsBuilder parent() {
+    return Parents.builder()
+      .loginId("parent001")
+      .password("password001")
+      .sex(Sex.MAN)
+      .connectionNumber("010-1111-1111")
+      .token("token001")
+      .childBirthday(LocalDate.of(2000, 11, 11))
+      .childName("student001")
+      .childSex(Sex.MAN)
+      .name("parent");
+  }
+
   public static Student.StudentBuilder student() {
     return Student.builder()
       .name("student001")
       .sex(Sex.MAN)
-      .age(10)
-      .connectionNumber("010-0000-0000");
+      .birthday(LocalDate.of(2000, 11, 11));
   }
 }

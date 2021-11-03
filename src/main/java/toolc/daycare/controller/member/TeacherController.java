@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
@@ -17,6 +18,7 @@ import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -116,8 +118,9 @@ public class TeacherController {
       ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "선생님의 반이 없습니다.", null);
       return ResponseEntity.badRequest().body(responseBody);
     }
-
-    List<ParentVO> parents = teacherService.findParents(teacher.getAClass().getStudents());
+    List<Parents> parentsList = new ArrayList<>();
+    teacher.getAClass().getStudents().forEach(s -> parentsList.addAll(s.getParents()));
+    List<ParentVO> parents = teacherService.findParents(parentsList);
 
     ResponseDto<List<ParentVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", parents);
     return ResponseEntity.ok(responseBody);
