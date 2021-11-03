@@ -1,15 +1,19 @@
 package toolc.daycare.controller.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
+
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
-import toolc.daycare.domain.member.Director;
+import toolc.daycare.domain.message.CenterRegisterMessage;
+import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.group.request.center.CenterRegisterRequestDto;
+
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.member.AdminService;
@@ -20,7 +24,12 @@ import toolc.daycare.vo.CenterVO;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
+
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/member/admin")
 public class AdminController {
@@ -29,15 +38,8 @@ public class AdminController {
   private final DirectorService directorService;
   private final CenterService centerService;
 
-  @Autowired
-  public AdminController(AdminService adminService,
-                         DirectorService directorService,
-                         CenterService centerService
-  ) {
-    this.adminService = adminService;
-    this.directorService = directorService;
-    this.centerService = centerService;
-  }
+
+
 
   @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
@@ -65,28 +67,43 @@ public class AdminController {
     return ResponseEntity.ok(responseBody);
   }
 
-  @PostMapping("allowCenter")
-  public ResponseEntity<?> allowCenter(@Auth String loginId, @RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
-    RequestUtil.checkNeedValue(
-      centerRegisterRequestDto.getDirectorLoginId(),
-      centerRegisterRequestDto.getCenterName(),
-      centerRegisterRequestDto.getAddress(),
-      centerRegisterRequestDto.getFoundationDate()
-    );
+  @PostMapping("allowCenter/{messageId}")
+  public ResponseEntity<?> allowCenter(@Auth String loginId, @PathVariable Long messageId) {
 
-    Director director = directorService.findDirectorByLoginId(centerRegisterRequestDto.getDirectorLoginId());
-    if (director.getCenter() != null) {
-      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장이 유치원이 이미 있습니다.", null);
-      return ResponseEntity.badRequest().body(responseBody);
-    }
+    //TODO : 나중에 권한으로 바꿔줘야함
+    Admin admin = adminService.findAdminByLoginId(loginId);
 
-    CenterVO newCenter = centerService.register(
-      director,
-      centerRegisterRequestDto.getCenterName(),
-      centerRegisterRequestDto.getAddress(),
-      centerRegisterRequestDto.getFoundationDate());
+    Center newCenter = adminService.allowRegister(messageId);
 
-    ResponseDto<CenterVO> responseBody = new ResponseDto<>(OK.value(), "요청 수락", newCenter);
+    ResponseDto<Center> responseBody =
+      new ResponseDto<>(OK.value(), "Center 등록 요청 수락 완료", newCenter);
+
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("rejectCenter/{messageId}")
+  public ResponseEntity<?> rejectCenter(@Auth String loginId, @PathVariable Long messageId) {
+
+    //TODO : 나중에 권한으로 바꿔줘야함
+    Admin admin = adminService.findAdminByLoginId(loginId);
+
+    adminService.rejectRegister(messageId);
+
+    ResponseDto<?> responseBody =
+      new ResponseDto<>(OK.value(), "Center 등록 요청 거절 완료", null);
+
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/registers")
+  public ResponseEntity<?> getRegisters() {
+
+    List<CenterRegisterMessage> registers = adminService.getAllRegister();
+
+    ResponseDto<List<CenterRegisterMessage>> responseBody =
+      new ResponseDto<>(OK.value(), "모든 요청 조회", registers);
+
+
     return ResponseEntity.ok(responseBody);
   }
 }

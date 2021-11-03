@@ -39,9 +39,6 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "shuttle_id")
     private Shuttle shuttle;
 
-    @OneToMany(mappedBy = "student")
-    private List<Parents> parents = new ArrayList<>();
-
 
     @Builder
     public Student(String name, LocalDate birthday, Sex sex) {

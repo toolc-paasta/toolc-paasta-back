@@ -18,8 +18,6 @@ public class Class extends BaseEntity {
 
   private String name;
 
-  @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL)
-  private List<Student> students = new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "center_id")
