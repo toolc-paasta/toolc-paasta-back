@@ -6,16 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
-import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.member.Parents;
-import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
-import toolc.daycare.dto.member.response.parents.ParentsLoginResponseDto;
-import toolc.daycare.dto.member.response.parents.ParentsSignupResponseDto;
+import toolc.daycare.dto.member.request.parents.SearchParentRequestDto;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
+import toolc.daycare.vo.ParentVO;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -85,4 +83,16 @@ public class ParentsController {
     return ResponseEntity.ok(responseBody);
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<?> searchParent(@RequestBody SearchParentRequestDto searchParentRequestDto) {
+    RequestUtil.checkNeedValue(
+      searchParentRequestDto.getName(),
+      searchParentRequestDto.getConnectionNumber()
+    );
+
+    ParentVO parent = parentsService.search(searchParentRequestDto.getName(), searchParentRequestDto.getConnectionNumber());
+
+    ResponseDto<ParentVO> responseBody = new ResponseDto<>(OK.value(), "검색 성공", parent);
+    return ResponseEntity.ok(responseBody);
+  }
 }
