@@ -9,6 +9,7 @@ import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.member.*;
+import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
