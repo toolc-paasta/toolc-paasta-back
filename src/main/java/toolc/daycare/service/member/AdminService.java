@@ -63,6 +63,7 @@ public class AdminService {
       .name(allow.getCenterName())
       .address(allow.getAddress())
       .foundationDate(allow.getFoundationDate())
+      .channelName(allow.getDirector().getLoginId() + '_' + allow.getCenterName())
       .star(0L)
       .build();
     checkNotExistCenter(allow.getDirector());

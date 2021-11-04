@@ -46,12 +46,14 @@ public class ParentsService {
   }
 
   public Parents signUp(String loginId, String password, String name, Sex sex,
-                        String childName, LocalDate childBirthday, Sex childSex) {
+                        String connectionNumber, String childName, LocalDate childBirthday,
+                        Sex childSex) {
     memberService.checkDuplicateMember(loginId);
     Parents parents = Parents.builder()
       .loginId(loginId)
       .password(passwordEncoder.encode(password))
       .name(name)
+      .connectionNumber(connectionNumber)
       .sex(sex)
       .childName(childName)
       .childBirthday(childBirthday)

@@ -50,7 +50,8 @@ public class TeacherController {
     RequestUtil.checkNeedValue(
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
-      teacherSignupRequestDto.getName()
+      teacherSignupRequestDto.getName(),
+      teacherSignupRequestDto.getConnectionNumber()
     );
     RequestUtil.checkCorrectEnum(
       teacherSignupRequestDto.getSex()
@@ -59,6 +60,7 @@ public class TeacherController {
     Teacher newTeacher = teacherService.signUp(
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
+      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getName(),
       teacherSignupRequestDto.getSex()
     );

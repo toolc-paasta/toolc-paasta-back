@@ -42,18 +42,18 @@ public class TeacherService {
   private final PasswordEncoder passwordEncoder;
   private final TeacherRegisterClassRepository registerClassRepository;
 
-
-
   public Teacher findTeacherByLoginId(String loginId) {
     return teacherRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
   }
 
-  public Teacher signUp(String loginId, String password, String name, Sex sex) {
+  public Teacher signUp(String loginId, String password, String name,
+                        String connectionNumber, Sex sex) {
     memberService.checkDuplicateMember(loginId);
     Teacher teacher = Teacher.builder()
       .loginId(loginId)
       .password(passwordEncoder.encode(password))
       .name(name)
+      .connectionNumber(connectionNumber)
       .sex(sex)
       .build();
 
