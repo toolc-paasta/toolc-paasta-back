@@ -10,7 +10,6 @@ import toolc.daycare.domain.member.Parents;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
-import toolc.daycare.dto.member.request.parents.SearchParentRequestDto;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentVO;
@@ -84,13 +83,13 @@ public class ParentsController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<?> searchParent(@RequestBody SearchParentRequestDto searchParentRequestDto) {
+  public ResponseEntity<?> searchParent(@RequestParam("name") String name, @RequestParam("connectionNumber") String connectionNumber) {
     RequestUtil.checkNeedValue(
-      searchParentRequestDto.getName(),
-      searchParentRequestDto.getConnectionNumber()
+      name,
+      connectionNumber
     );
 
-    ParentVO parent = parentsService.search(searchParentRequestDto.getName(), searchParentRequestDto.getConnectionNumber());
+    ParentVO parent = parentsService.search(name, connectionNumber);
 
     ResponseDto<ParentVO> responseBody = new ResponseDto<>(OK.value(), "검색 성공", parent);
     return ResponseEntity.ok(responseBody);
