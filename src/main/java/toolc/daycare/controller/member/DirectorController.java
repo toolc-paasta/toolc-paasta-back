@@ -142,7 +142,6 @@ public class DirectorController {
 
     ResponseDto<?> responseBody = new ResponseDto<>(
       OK.value(), "Teacher Class 등록 요청 거절 성공", null);
-    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "요청 전송 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
 

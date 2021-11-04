@@ -9,12 +9,15 @@ import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
+import toolc.daycare.domain.member.Student;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.vo.ParentVO;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,12 +46,14 @@ public class ParentsService {
   }
 
   public Parents signUp(String loginId, String password, String name, Sex sex,
-                        String childName, LocalDate childBirthday, Sex childSex) {
+                        String connectionNumber, String childName, LocalDate childBirthday,
+                        Sex childSex) {
     memberService.checkDuplicateMember(loginId);
     Parents parents = Parents.builder()
       .loginId(loginId)
       .password(passwordEncoder.encode(password))
       .name(name)
+      .connectionNumber(connectionNumber)
       .sex(sex)
       .childName(childName)
       .childBirthday(childBirthday)
@@ -85,5 +90,11 @@ public class ParentsService {
       .sex(parents.getSex())
       .childBirthday(parents.getChildBirthday())
       .build();
+  }
+
+  public List<Parents> getParentList(List<Student> studentList) {
+    List<Parents> parentsList = new ArrayList<>();
+    studentList.forEach(s -> parentsList.addAll(parentsRepository.findByStudentId(s.getId())));
+    return parentsList;
   }
 }

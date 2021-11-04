@@ -9,6 +9,7 @@ import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.member.*;
+import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
@@ -41,18 +42,18 @@ public class TeacherService {
   private final PasswordEncoder passwordEncoder;
   private final TeacherRegisterClassRepository registerClassRepository;
 
-
-
   public Teacher findTeacherByLoginId(String loginId) {
     return teacherRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
   }
 
-  public Teacher signUp(String loginId, String password, String name, Sex sex) {
+  public Teacher signUp(String loginId, String password, String name,
+                        String connectionNumber, Sex sex) {
     memberService.checkDuplicateMember(loginId);
     Teacher teacher = Teacher.builder()
       .loginId(loginId)
       .password(passwordEncoder.encode(password))
       .name(name)
+      .connectionNumber(connectionNumber)
       .sex(sex)
       .build();
 

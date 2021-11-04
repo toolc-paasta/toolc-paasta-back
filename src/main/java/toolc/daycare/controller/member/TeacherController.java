@@ -1,12 +1,13 @@
 package toolc.daycare.controller.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.member.Parents;
+import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
@@ -14,11 +15,12 @@ import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
 import toolc.daycare.service.fcm.FcmSendBody;
+import toolc.daycare.service.member.ParentsService;
+import toolc.daycare.service.member.StudentService;
 import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentVO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -26,15 +28,13 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/member/teacher")
 public class TeacherController {
 
   private final TeacherService teacherService;
-
-  @Autowired
-  public TeacherController(TeacherService teacherService) {
-    this.teacherService = teacherService;
-  }
+  private final StudentService studentService;
+  private final ParentsService parentsService;
 
   @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
@@ -50,7 +50,8 @@ public class TeacherController {
     RequestUtil.checkNeedValue(
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
-      teacherSignupRequestDto.getName()
+      teacherSignupRequestDto.getName(),
+      teacherSignupRequestDto.getConnectionNumber()
     );
     RequestUtil.checkCorrectEnum(
       teacherSignupRequestDto.getSex()
@@ -59,6 +60,7 @@ public class TeacherController {
     Teacher newTeacher = teacherService.signUp(
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
+      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getName(),
       teacherSignupRequestDto.getSex()
     );
@@ -118,11 +120,12 @@ public class TeacherController {
       ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "선생님의 반이 없습니다.", null);
       return ResponseEntity.badRequest().body(responseBody);
     }
-    List<Parents> parentsList = new ArrayList<>();
-    teacher.getAClass().getStudents().forEach(s -> parentsList.addAll(s.getParents()));
-    List<ParentVO> parents = teacherService.findParents(parentsList);
 
-    ResponseDto<List<ParentVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", parents);
+    List<Student> studentList = studentService.getStudentsByClassId(teacher.getAClass().getId());
+    List<Parents> parentsList = parentsService.getParentList(studentList);
+    List<ParentVO> parentVOList = teacherService.findParents(parentsList);
+
+    ResponseDto<List<ParentVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", parentVOList);
     return ResponseEntity.ok(responseBody);
   }
 }

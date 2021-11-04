@@ -16,7 +16,7 @@ public class AccessToken {
     Bearer
   }
   String loginId;
-  final static Duration ACCESS_TOKEN_EXPIRE_TIME = Duration.ofDays(30);
+  final static Duration ACCESS_TOKEN_EXPIRE_TIME = Duration.ofDays(1000);
   Instant expirationAt;
   final static String AUTHORITY_KEY = "auth";
   Authority authority;
