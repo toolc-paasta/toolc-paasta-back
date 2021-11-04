@@ -60,8 +60,8 @@ public class TeacherController {
     Teacher newTeacher = teacherService.signUp(
       teacherSignupRequestDto.getLoginId(),
       teacherSignupRequestDto.getPassword(),
-      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getName(),
+      teacherSignupRequestDto.getConnectionNumber(),
       teacherSignupRequestDto.getSex()
     );
 
