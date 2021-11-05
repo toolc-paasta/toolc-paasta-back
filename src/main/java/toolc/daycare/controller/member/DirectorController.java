@@ -19,14 +19,17 @@ import toolc.daycare.dto.member.request.director.DirectorRegisterCenterRequestDt
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
+import toolc.daycare.mapper.DirectorMapper;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
+import toolc.daycare.vo.DirectorVO;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -40,13 +43,22 @@ public class DirectorController {
 
   private final DirectorService directorService;
   private final CenterService centerService;
+  private final DirectorMapper mapper = new DirectorMapper();
 
   @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
     Director director = directorService.findDirectorByLoginId(loginId);
+    DirectorVO directorVO;
+    Optional<Center> centerOptional = centerService.findCenter(director.getId());
 
-    ResponseDto<Director> response = new ResponseDto<>(OK.value(), "정보 조회 성공", director);
+    if (centerOptional.isPresent()) {
+      directorVO = mapper.toDirectorVOWithCenter(director, centerOptional.get());
+      ResponseDto<DirectorVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", directorVO);
+      return ResponseEntity.ok(response);
+    }
 
+    directorVO = mapper.toDirectorVO(director);
+    ResponseDto<DirectorVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", directorVO);
     return ResponseEntity.ok(response);
   }
 

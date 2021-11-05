@@ -61,4 +61,8 @@ public class CenterService {
 
     return new ClassVO(center.getName(), aClass.getName());
   }
+
+  public Optional<Center> findCenter(Long directorId) {
+    return centerRepository.findByDirectorId(directorId);
+  }
 }
