@@ -51,10 +51,7 @@ public class AdminService {
   }
   
   public List<CenterRegisterMessage> getAllRegister() {
-    List<CenterRegisterMessage> registers = registerRepository.findAll();
-
-    return registers;
-
+    return registerRepository.findAll();
   }
 
   public Center allowRegister(Long messageId) {
@@ -101,13 +98,10 @@ public class AdminService {
   }
 
   private void checkNotExistCenter(Director director) {
-    if (centerRepository.findByDirectorId(director.getId()) != null) {
-      throw new AlreadyMatchCenterException();
-    }
+    centerRepository.findByDirectorId(director.getId()).orElseThrow(AlreadyMatchCenterException::new);
   }
+
   public Admin findAdminByLoginId(String loginId) {
     return adminRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
   }
-
-
 }
