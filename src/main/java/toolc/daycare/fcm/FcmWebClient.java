@@ -15,7 +15,7 @@ public class FcmWebClient {
   @Bean
   public WebClient webClient() {
     return WebClient.builder()
-      .baseUrl("localhost:3000/notification/send")
+      .baseUrl("https://notification.paas-ta.org/notification/send")
       .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
       .build();
   }
