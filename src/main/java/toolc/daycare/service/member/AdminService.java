@@ -98,7 +98,9 @@ public class AdminService {
   }
 
   private void checkNotExistCenter(Director director) {
-    centerRepository.findByDirectorId(director.getId()).orElseThrow(AlreadyMatchCenterException::new);
+    if(centerRepository.findByDirectorId(director.getId()).isPresent()) {
+      throw new AlreadyMatchCenterException();
+    }
   }
 
   public Admin findAdminByLoginId(String loginId) {
