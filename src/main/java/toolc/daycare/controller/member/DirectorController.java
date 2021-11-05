@@ -153,12 +153,8 @@ public class DirectorController {
     );
 
     Director director = directorService.findDirectorByLoginId(loginId);
-    if (director.getCenter() == null) {
-      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
-      return ResponseEntity.badRequest().body(responseBody);
-    }
+    ClassVO classVO = centerService.createClass(director.getId(), createClassRequestDto.getName());
 
-    ClassVO classVO = centerService.createClass(director.getCenter(), createClassRequestDto.getName());
     ResponseDto<ClassVO> responseBody = new ResponseDto<>(OK.value(), "생성 성공", classVO);
     return ResponseEntity.ok(responseBody);
   }

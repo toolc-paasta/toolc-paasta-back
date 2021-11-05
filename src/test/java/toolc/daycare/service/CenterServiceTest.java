@@ -55,20 +55,4 @@ class CenterServiceTest {
     // then
     assertThat(centerVO, is(target));
   }
-
-  @Test
-  void 반생성() {
-    // given
-    Center center = center().build();
-    center.setDirector(director().build());
-    String name = "class001";
-    ClassVO target = new ClassVO(center.getName(), name);
-    given(classRepository.save(any())).willReturn(any());
-
-    // when
-    ClassVO classVO = centerService.createClass(center, name);
-
-    // then
-    assertThat(classVO, is(target));
-  }
 }

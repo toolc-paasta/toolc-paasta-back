@@ -18,6 +18,7 @@ import toolc.daycare.vo.CenterVO;
 import toolc.daycare.vo.ClassVO;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -25,8 +26,6 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 @Service
 @RequiredArgsConstructor
 public class CenterService {
-
-
   private final CenterRepository centerRepository;
   private final ClassRepository classRepository;
 
@@ -52,12 +51,12 @@ public class CenterService {
       .build();
   }
 
-  public ClassVO createClass(Center center, String name) {
+  public ClassVO createClass(Long directorId, String name) {
+    Center center =  centerRepository.findByDirectorId(directorId).orElseThrow(NoExistCenterException::new);
     Class aClass = Class.builder()
       .name(name)
       .build();
     aClass.setCenter(center);
-
     classRepository.save(aClass);
 
     return new ClassVO(center.getName(), aClass.getName());
