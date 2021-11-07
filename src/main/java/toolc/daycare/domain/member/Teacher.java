@@ -15,15 +15,12 @@ import static toolc.daycare.domain.member.Authority.TEACHER;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Teacher extends MemberBaseEntity {
 
-    private String role;
-
     @ManyToOne
     @JoinColumn(name = "class_id")
     @Setter
     private Class aClass;
 
     @Builder
-
     public Teacher(String loginId, String password, String name, String connectionNumber, String token, Sex sex) {
         super(loginId, password, name, connectionNumber, token, sex, TEACHER);
     }
