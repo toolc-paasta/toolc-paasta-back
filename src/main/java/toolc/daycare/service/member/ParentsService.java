@@ -12,6 +12,7 @@ import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
+import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.vo.ParentVO;
 
 import javax.transaction.Transactional;
@@ -28,17 +29,20 @@ public class ParentsService {
   private final ParentsRepository parentsRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
+  private final StudentRepository studentRepository;
 
 
   @Autowired
   public ParentsService(MemberService memberService,
                         ParentsRepository parentsRepository,
                         PasswordEncoder passwordEncoder,
-                        TokenService tokenService) {
+                        TokenService tokenService,
+                        StudentRepository studentRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
+    this.studentRepository = studentRepository;
   }
 
   public Parents findParentsByLoginId(String loginId) {
@@ -60,6 +64,14 @@ public class ParentsService {
       .childSex(childSex)
       .build();
 
+    Student student = Student.builder()
+      .name(childName)
+      .sex(childSex)
+      .birthday(childBirthday)
+      .build();
+
+    studentRepository.save(student);
+    parents.setStudents(student);
     return parentsRepository.save(parents);
   }
 
