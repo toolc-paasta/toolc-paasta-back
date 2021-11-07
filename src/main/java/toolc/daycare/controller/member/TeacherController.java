@@ -14,12 +14,14 @@ import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
+import toolc.daycare.mapper.TeacherMapper;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.service.member.StudentService;
 import toolc.daycare.service.member.TeacherService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentVO;
+import toolc.daycare.vo.TeacherVO;
 
 import java.util.List;
 
@@ -35,13 +37,27 @@ public class TeacherController {
   private final TeacherService teacherService;
   private final StudentService studentService;
   private final ParentsService parentsService;
+  private final TeacherMapper mapper = new TeacherMapper();
 
   @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
     Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+    TeacherVO teacherVO;
 
-    ResponseDto<Teacher> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacher);
+    if (teacher.getAClass() == null) {
+      teacherVO = mapper.toTeacherVOExcludeClass(teacher);
+      ResponseDto<TeacherVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacherVO);
+      return ResponseEntity.ok(response);
+    }
 
+    if (teacher.getAClass().getCenter() == null) {
+      teacherVO = mapper.toTeacherVOExcludeDirector(teacher);
+      ResponseDto<TeacherVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacherVO);
+      return ResponseEntity.ok(response);
+    }
+
+    teacherVO = mapper.toTeacherVO(teacher);
+    ResponseDto<TeacherVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacherVO);
     return ResponseEntity.ok(response);
   }
 
@@ -84,13 +100,6 @@ public class TeacherController {
 
     ResponseDto<TokenVO> responseBody = new ResponseDto<>(OK.value(), "로그인 성공", token);
     return ResponseEntity.ok(responseBody);
-//        Teacher loginTeacher = teacherService.login(
-//                loginRequestDto.getLoginId(),
-//                loginRequestDto.getPassword()
-//        );
-//
-//        BaseResponseSuccessDto responseBody = new TeacherLoginResponseDto(loginTeacher);
-//        return ResponseEntity.ok(responseBody);
   }
 
   @PostMapping("/registerClass")

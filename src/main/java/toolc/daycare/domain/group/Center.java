@@ -34,7 +34,6 @@ public class Center extends BaseEntity {
   @JoinColumn(name = "director_id")
   private Director director;
 
-
   @Builder
   public Center(String name, String address, LocalDate foundationDate, Long star, String channelName) {
     this.name = name;
