@@ -11,9 +11,12 @@ import toolc.daycare.domain.member.Parents;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
+import toolc.daycare.mapper.ParentMapper;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
+import toolc.daycare.vo.ParentDetailVO;
 import toolc.daycare.vo.ParentVO;
+import toolc.daycare.vo.TeacherVO;
 
 import java.util.List;
 
@@ -25,6 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class ParentsController {
 
   private final ParentsService parentsService;
+  private final ParentMapper mapper = new ParentMapper();
 
   @Autowired
   public ParentsController(ParentsService parentsService) {
@@ -34,9 +38,22 @@ public class ParentsController {
   @GetMapping
   public ResponseEntity<?> getInfo(@Auth String loginId) {
     Parents parents = parentsService.findParentsByLoginId(loginId);
+    ParentDetailVO parentDetailVO;
 
-    ResponseDto<Parents> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parents);
+    if (parents.getStudent().getAClass() == null) {
+      parentDetailVO = mapper.toParentWithDirectorVOExcludeClass(parents);
+      ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
+      return ResponseEntity.ok(response);
+    }
 
+    if (parents.getStudent().getAClass().getCenter() == null) {
+      parentDetailVO = mapper.toParentWithDirectorVOExcludeDirector(parents);
+      ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
+      return ResponseEntity.ok(response);
+    }
+
+    parentDetailVO = mapper.toParentWithDirectorVO(parents);
+    ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
     return ResponseEntity.ok(response);
   }
 

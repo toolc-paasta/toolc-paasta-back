@@ -70,6 +70,14 @@ public class ParentsService {
       .childSex(childSex)
       .build();
 
+    Student student = Student.builder()
+      .name(childName)
+      .sex(childSex)
+      .birthday(childBirthday)
+      .build();
+
+    studentRepository.save(student);
+    parents.setStudents(student);
     return parentsRepository.save(parents);
   }
 
