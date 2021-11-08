@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.exception.NotExistMemberException;
+import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
+import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.vo.ParentVO;
 
 import javax.transaction.Transactional;
@@ -26,23 +29,30 @@ public class ParentsService {
 
   private final MemberService memberService;
   private final ParentsRepository parentsRepository;
+  private final TeacherRepository teacherRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
+  private final NoticeRepository noticeRepository;
 
 
   @Autowired
   public ParentsService(MemberService memberService,
                         ParentsRepository parentsRepository,
+                        TeacherRepository teacherRepository,
                         PasswordEncoder passwordEncoder,
-                        TokenService tokenService) {
+                        TokenService tokenService,
+                        NoticeRepository noticeRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
+    this.teacherRepository = teacherRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
+    this.noticeRepository = noticeRepository;
   }
 
   public Parents findParentsByLoginId(String loginId) {
-    return parentsRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+    return parentsRepository.findByLoginId(loginId)
+      .orElseThrow(NotExistMemberException::new);
   }
 
   public Parents signUp(String loginId, String password, String name, Sex sex,
@@ -85,7 +95,8 @@ public class ParentsService {
       .connectionNumber(parents.getConnectionNumber())
       .childSex(parents.getChildSex())
       .childName(parents.getChildName())
-      .childId(parents.getStudent().getId())
+      .childId(parents.getStudent()
+                 .getId())
       .loginId(parents.getLoginId())
       .sex(parents.getSex())
       .childBirthday(parents.getChildBirthday())
@@ -97,4 +108,14 @@ public class ParentsService {
     studentList.forEach(s -> parentsList.addAll(parentsRepository.findByStudentId(s.getId())));
     return parentsList;
   }
+
+  public List<Notice> getAllNotice(String loginId) {
+    return noticeRepository.findByCenterId(teacherRepository.findByLoginId(loginId)
+                                                                .get()
+                                                                .getAClass()
+                                                                .getCenter()
+                                                                .getId());
+
+  }
+
 }
