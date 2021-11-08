@@ -6,12 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.group.Class;
+//import toolc.daycare.domain.group.Notice;
+import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
+import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
 import toolc.daycare.mapper.TeacherMapper;
@@ -23,6 +27,7 @@ import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentVO;
 import toolc.daycare.vo.TeacherVO;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -135,6 +140,22 @@ public class TeacherController {
     List<ParentVO> parentVOList = teacherService.findParents(parentsList);
 
     ResponseDto<List<ParentVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", parentVOList);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("/notice")
+  public ResponseEntity<?> notice(@Auth String loginId, @RequestBody NoticeRequestDto dto) throws IOException {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+
+    Notice notice = teacherService.notice(teacher, dto);
+
+    //todo : 애매하다, 모두에게 notification보내야할까, 반 사람들에게만 보내야할까.
+    Class teacherClass = teacher.getAClass();
+    teacherService.sendMessage(loginId,
+      new MessageSendRequestDto(teacherClass.getCenter().getName(), teacherClass.getName(),
+        teacherClass.getName() + "공지가 있습니다.",dto.getTitle()));
+
+    ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
     return ResponseEntity.ok(responseBody);
   }
 }

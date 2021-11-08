@@ -1,0 +1,12 @@
+# aws S3 설정
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA566P6BOUKDG6VYA2
+      secretKey: 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
+    s3:
+      bucket: stmap-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
