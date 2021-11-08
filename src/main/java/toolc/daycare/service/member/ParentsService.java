@@ -110,11 +110,16 @@ public class ParentsService {
   }
 
   public List<Notice> getAllNotice(String loginId) {
-    return noticeRepository.findByCenterId(teacherRepository.findByLoginId(loginId)
-                                                                .get()
-                                                                .getAClass()
-                                                                .getCenter()
-                                                                .getId());
+    Parents parents = parentsRepository.findByLoginId(loginId)
+      .get();
+    log.info("parents = {}", parents.getName());
+    log.info("student = {}", parents.getStudent());
+    log.info("class ={}", parents.getStudent().getAClass());
+    log.info("center = {}", parents.getStudent().getAClass().getCenter());
+    log.info("centerId = {}", parents.getStudent().getAClass().getCenter().getId());
+    return noticeRepository.findByCenterId(parentsRepository.findByLoginId(loginId).get()
+                                             .getStudent().getAClass().getCenter().getId());
+
 
   }
 
