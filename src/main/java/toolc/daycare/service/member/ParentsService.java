@@ -14,6 +14,7 @@ import toolc.daycare.domain.member.Student;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
+import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.vo.ParentVO;
 
@@ -33,7 +34,7 @@ public class ParentsService {
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
   private final NoticeRepository noticeRepository;
-
+  private final StudentRepository studentRepository;
 
   @Autowired
   public ParentsService(MemberService memberService,
@@ -41,13 +42,14 @@ public class ParentsService {
                         TeacherRepository teacherRepository,
                         PasswordEncoder passwordEncoder,
                         TokenService tokenService,
-                        NoticeRepository noticeRepository) {
+                        NoticeRepository noticeRepository, StudentRepository studentRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
     this.teacherRepository = teacherRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
     this.noticeRepository = noticeRepository;
+    this.studentRepository = studentRepository;
   }
 
   public Parents findParentsByLoginId(String loginId) {
@@ -104,7 +106,7 @@ public class ParentsService {
       .childSex(parents.getChildSex())
       .childName(parents.getChildName())
       .childId(parents.getStudent()
-                 .getId())
+        .getId())
       .loginId(parents.getLoginId())
       .sex(parents.getSex())
       .childBirthday(parents.getChildBirthday())
@@ -126,7 +128,7 @@ public class ParentsService {
     log.info("center = {}", parents.getStudent().getAClass().getCenter());
     log.info("centerId = {}", parents.getStudent().getAClass().getCenter().getId());
     return noticeRepository.findByCenterId(parentsRepository.findByLoginId(loginId).get()
-                                             .getStudent().getAClass().getCenter().getId());
+      .getStudent().getAClass().getCenter().getId());
 
 
   }
