@@ -181,6 +181,8 @@ public class DirectorController {
     Director director = directorService.findDirectorByLoginId(loginId);
 
     Notice notice = directorService.notice(director, dto);
+    directorService.sendMessage(loginId, dto.getTitle(), dto.getContent());
+
 
     ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
     return ResponseEntity.ok(responseBody);
