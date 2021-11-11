@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.domain.group.Center;
+import toolc.daycare.domain.group.Class;
+import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
@@ -17,6 +19,8 @@ import toolc.daycare.dto.group.request.Class.CreateClassRequestDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorRegisterCenterRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
+import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
+import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
 import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
 import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
 import toolc.daycare.mapper.DirectorMapper;
@@ -28,6 +32,7 @@ import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
 import toolc.daycare.vo.DirectorVO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -168,6 +173,16 @@ public class DirectorController {
     ClassVO classVO = centerService.createClass(director.getId(), createClassRequestDto.getName());
 
     ResponseDto<ClassVO> responseBody = new ResponseDto<>(OK.value(), "생성 성공", classVO);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("/notice")
+  public ResponseEntity<?> notice(@Auth String loginId, @RequestBody NoticeRequestDto dto) throws IOException {
+    Director director = directorService.findDirectorByLoginId(loginId);
+
+    Notice notice = directorService.notice(director, dto);
+
+    ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
     return ResponseEntity.ok(responseBody);
   }
 }

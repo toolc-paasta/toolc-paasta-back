@@ -140,7 +140,6 @@ public class TeacherController {
 
     Notice notice = teacherService.notice(teacher, dto);
 
-    //todo : 애매하다, 모두에게 notification보내야할까, 반 사람들에게만 보내야할까.
     Class teacherClass = teacher.getAClass();
     teacherService.sendMessage(loginId,
       new MessageSendRequestDto(teacherClass.getCenter().getName(), teacherClass.getName(),

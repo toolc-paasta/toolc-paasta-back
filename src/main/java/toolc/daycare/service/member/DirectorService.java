@@ -4,14 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import toolc.daycare.config.s3.S3Uploader;
+import toolc.daycare.domain.group.Center;
+import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
+import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.fcm.FcmWebClient;
+import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
+import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.AdminRepository;
 import toolc.daycare.repository.interfaces.member.DirectorRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
@@ -24,8 +30,11 @@ import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+
+import static java.util.Base64.getDecoder;
 
 @Slf4j
 @Service
@@ -42,6 +51,9 @@ public class DirectorService {
   private final TokenService tokenService;
   private final CenterRegisterRepository centerRegisterRepository;
   private final TeacherRegisterClassRepository teacherRegisterClassRepository;
+  private final NoticeRepository noticeRepository;
+  private final S3Uploader s3Uploader;
+  private final CenterRepository centerRepository;
 
   @Autowired
   public DirectorService(MemberService memberService,
@@ -54,7 +66,10 @@ public class DirectorService {
                          FcmSender fcmSender,
                          TokenService tokenService,
                          CenterRegisterRepository centerRegisterRepository,
-                         TeacherRegisterClassRepository teacherRegisterClassRepository) {
+                         TeacherRegisterClassRepository teacherRegisterClassRepository,
+                         NoticeRepository noticeRepository,
+                         S3Uploader s3Uploader,
+                         CenterRepository centerRepository) {
     this.memberService = memberService;
     this.adminRepository = adminRepository;
     this.directorRepository = directorRepository;
@@ -65,6 +80,9 @@ public class DirectorService {
     this.tokenService = tokenService;
     this.centerRegisterRepository = centerRegisterRepository;
     this.teacherRegisterClassRepository = teacherRegisterClassRepository;
+    this.noticeRepository = noticeRepository;
+    this.s3Uploader = s3Uploader;
+    this.centerRepository = centerRepository;
   }
 
   public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
@@ -142,5 +160,14 @@ public class DirectorService {
 
   public Director findDirectorByLoginId(String loginId) {
     return directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+  }
+
+  public Notice notice(Director director, NoticeRequestDto dto) throws IOException {
+    Center center =
+      centerRepository.findByDirectorId(director.getId()).orElseThrow(IllegalArgumentException::new);
+    String imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
+    Notice notice = new Notice(dto.getTitle(), dto.getContent(), LocalDate.now(),
+                               director.getName(), imgUrl, center);
+    return noticeRepository.save(notice);
   }
 }
