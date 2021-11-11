@@ -24,6 +24,9 @@ public class ParentsSignupRequestDto {
   private LocalDate childBirthday;
   private Sex childSex;
 
+  // 배우자 정보
+  private String spouseLoginId;
+
   @Builder
   public ParentsSignupRequestDto(String loginId, String password, String name, Sex sex,
                                  String connectionNumber, String childName, LocalDate childBirthday, Sex childSex) {

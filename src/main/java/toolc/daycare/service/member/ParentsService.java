@@ -11,6 +11,7 @@ import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
+import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
@@ -129,8 +130,22 @@ public class ParentsService {
     log.info("centerId = {}", parents.getStudent().getAClass().getCenter().getId());
     return noticeRepository.findByCenterId(parentsRepository.findByLoginId(loginId).get()
       .getStudent().getAClass().getCenter().getId());
-
-
   }
 
+  public Parents signUpAsSpouse(ParentsSignupRequestDto dto, Student student) {
+    memberService.checkDuplicateMember(dto.getLoginId());
+    Parents parents = Parents.builder()
+      .loginId(dto.getLoginId())
+      .password(passwordEncoder.encode(dto.getPassword()))
+      .name(dto.getName())
+      .connectionNumber(dto.getConnectionNumber())
+      .sex(dto.getSex())
+      .childName(student.getName())
+      .childBirthday(student.getBirthday())
+      .childSex(student.getSex())
+      .build();
+
+    parents.setStudents(student);
+    return parentsRepository.save(parents);
+  }
 }
