@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import static toolc.daycare.domain.member.Authority.PARENT;
 
 @Value
-public class ParentVO {
+public class ParentDetailVO {
   String loginId;
   String name;
   String connectionNumber;
@@ -19,10 +19,13 @@ public class ParentVO {
   Long childId;
   Sex childSex;
   LocalDate childBirthday;
+  String directorLoginId;
+  String className;
+  String centerName;
   Authority authority = PARENT;
 
   @Builder
-  public ParentVO(
+  public ParentDetailVO(
     String loginId,
     String name,
     String connectionNumber,
@@ -30,7 +33,10 @@ public class ParentVO {
     String childName,
     Long childId,
     Sex childSex,
-    LocalDate childBirthday) {
+    LocalDate childBirthday,
+    String directorLoginId,
+    String className,
+    String centerName) {
     this.loginId = loginId;
     this.name = name;
     this.connectionNumber = connectionNumber;
@@ -39,5 +45,8 @@ public class ParentVO {
     this.childId = childId;
     this.childSex = childSex;
     this.childBirthday = childBirthday;
+    this.directorLoginId = directorLoginId;
+    this.className = className;
+    this.centerName = centerName;
   }
 }

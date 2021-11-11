@@ -1,56 +1,39 @@
-//package toolc.daycare.controller;
-//
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import toolc.daycare.domain.group.Center;
-//import toolc.daycare.domain.member.Director;
-//import toolc.daycare.dto.BaseResponseSuccessDto;
-//import toolc.daycare.dto.group.request.center.CenterRegisterRequestDto;
-//import toolc.daycare.dto.group.response.center.CenterRegisterResponseDto;
-//import toolc.daycare.service.CenterService;
-//import toolc.daycare.service.member.DirectorService;
-//import toolc.daycare.util.RequestUtil;
-//
-//@Slf4j
-//@RestController
-//@RequestMapping("/api/center")
-//public class CenterController {
-//    private final CenterService centerService;
-//    private final DirectorService directorService;
+package toolc.daycare.controller;
 
-//    @Autowired
-//    public CenterController(CenterService centerService,
-//                            DirectorService directorService) {
-//        this.centerService = centerService;
-//        this.directorService = directorService;
-//    }
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import toolc.daycare.authentication.Auth;
+import toolc.daycare.dto.ResponseDto;
+import toolc.daycare.mapper.CenterMapper;
+import toolc.daycare.service.CenterService;
+import toolc.daycare.vo.CenterDetailVO;
 
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody CenterRegisterRequestDto centerRegisterRequestDto) {
-//        RequestUtil.checkNeedValue(
-//                centerRegisterRequestDto.getDirectorLoginId(),
-//                centerRegisterRequestDto.getName(),
-//                centerRegisterRequestDto.getAddress(),
-//                centerRegisterRequestDto.getFoundationDate(),
-//                centerRegisterRequestDto.getStar()
-//        );
-//        Director director = directorService.findDirectorByLoginId(centerRegisterRequestDto.getDirectorLoginId());
-//
-//        Center newCenter = centerService.register(
-//                director,
-//                centerRegisterRequestDto.getName(),
-//                centerRegisterRequestDto.getAddress(),
-//                centerRegisterRequestDto.getFoundationDate(),
-//                centerRegisterRequestDto.getStar());
-//
-//        BaseResponseSuccessDto responseBody = new CenterRegisterResponseDto(newCenter);
-//        return ResponseEntity.ok(responseBody);
-//    }
+import java.util.List;
+import java.util.stream.Collectors;
 
-//    @GetMapping("/search")
-//    public ResponseEntity<?> search(@RequestBody ){
-//        centerService.
-//    }
-//}
+import static org.springframework.http.HttpStatus.OK;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/center")
+public class CenterController {
+  private final CenterService centerService;
+  private final CenterMapper mapper = new CenterMapper();
+
+  @GetMapping
+  public ResponseEntity<?> getAllCenter() {
+    List<CenterDetailVO> centerDetailVOList = centerService.getAllCenter()
+      .stream()
+      .map(c -> mapper.toCenterDetailVo(c, centerService.getAllClassByCenterId(c.getId())))
+      .collect(Collectors.toList());
+
+    ResponseDto<List<CenterDetailVO>> responseBody = new ResponseDto<>(OK.value(), "조회 성공", centerDetailVOList);
+    return ResponseEntity.ok(responseBody);
+  }
+}
