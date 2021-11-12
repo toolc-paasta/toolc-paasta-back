@@ -53,10 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
       // TEACHER 권한
       .antMatchers("/api/member/teacher/read").hasAuthority("TEACHER")
+      .antMatchers("/enter/child/**").hasAuthority("TEACHER")
 
       // PARENT 권한
       // 추가예정
-
       .antMatchers("/api/member/director").authenticated()
       .antMatchers("/api/member/**").permitAll()
       .antMatchers("/**").permitAll()
