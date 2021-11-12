@@ -148,7 +148,10 @@ public class DirectorService {
 
   public List<TeacherRegisterClassMessage> findAllRegisterRequest(String loginId) {
     Center center = centerRepository.findByDirectorId(
-      directorRepository.findByLoginId(loginId).get().getId()).get();
+        directorRepository.findByLoginId(loginId)
+          .get()
+          .getId())
+      .get();
     return teacherRegisterClassRepository.findByCenterId(center.getId());
   }
 
@@ -202,7 +205,10 @@ public class DirectorService {
     Center center =
       centerRepository.findByDirectorId(director.getId())
         .orElseThrow(IllegalArgumentException::new);
-    String imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
+    String imgUrl = "";
+    if (dto.getImg() != null) {
+      imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
+    }
     Notice notice = new Notice(dto.getTitle(), dto.getContent(), LocalDate.now(),
                                director.getName(), imgUrl, center);
     return noticeRepository.save(notice);
