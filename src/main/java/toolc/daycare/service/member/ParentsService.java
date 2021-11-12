@@ -14,6 +14,7 @@ import toolc.daycare.domain.member.Student;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
+import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.member.TeacherRepository;
 import toolc.daycare.vo.ParentVO;
 
@@ -30,6 +31,7 @@ public class ParentsService {
   private final MemberService memberService;
   private final ParentsRepository parentsRepository;
   private final TeacherRepository teacherRepository;
+  private final StudentRepository studentRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
   private final NoticeRepository noticeRepository;
@@ -39,12 +41,14 @@ public class ParentsService {
   public ParentsService(MemberService memberService,
                         ParentsRepository parentsRepository,
                         TeacherRepository teacherRepository,
+                        StudentRepository studentRepository,
                         PasswordEncoder passwordEncoder,
                         TokenService tokenService,
                         NoticeRepository noticeRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
     this.teacherRepository = teacherRepository;
+    this.studentRepository = studentRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
     this.noticeRepository = noticeRepository;
