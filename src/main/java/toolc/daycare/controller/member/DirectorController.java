@@ -133,7 +133,7 @@ public class DirectorController {
     log.info("loginId = {}", loginId);
 
 
-    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest();
+    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest(loginId);
 
     ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
       OK.value(), "Teacher Class 등록 요청 조회 성공", allRegisters);
