@@ -150,7 +150,10 @@ public class TeacherService {
   }
 
   public Notice notice(Teacher teacher, NoticeRequestDto dto) throws IOException {
-    String imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
+    String imgUrl =  "";
+    if (dto.getImg() != null) {
+      imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
+    }
     Notice notice = new Notice(dto.getTitle(), dto.getContent(), LocalDate.now(),
       teacher.getName(), imgUrl, teacher.getAClass().getCenter());
     return noticeRepository.save(notice);

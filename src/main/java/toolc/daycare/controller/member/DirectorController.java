@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
+import toolc.daycare.domain.group.Class;
+import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
@@ -15,6 +17,10 @@ import toolc.daycare.dto.group.request.Class.CreateClassRequestDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorRegisterCenterRequestDto;
 import toolc.daycare.dto.member.request.director.DirectorSignupRequestDto;
+import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
+import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
+import toolc.daycare.dto.member.response.director.DirectorRegisterCenterDto;
+import toolc.daycare.dto.member.response.director.DirectorSignupResponseDto;
 import toolc.daycare.mapper.DirectorMapper;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.fcm.FcmSendBody;
@@ -23,6 +29,7 @@ import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
 import toolc.daycare.vo.DirectorVO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,7 +128,7 @@ public class DirectorController {
     log.info("loginId = {}", loginId);
 
 
-    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest();
+    List<TeacherRegisterClassMessage> allRegisters = directorService.findAllRegisterRequest(loginId);
 
     ResponseDto<List<TeacherRegisterClassMessage>> responseBody = new ResponseDto<>(
       OK.value(), "Teacher Class 등록 요청 조회 성공", allRegisters);
@@ -176,6 +183,18 @@ public class DirectorController {
     FcmSendBody fcm = directorService.goShuttle(centerService.findCenter(director.getId()).get());
 
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+  
+  @PostMapping("/notice")
+  public ResponseEntity<?> notice(@Auth String loginId, @RequestBody NoticeRequestDto dto) throws IOException {
+    Director director = directorService.findDirectorByLoginId(loginId);
+
+    Notice notice = directorService.notice(director, dto);
+    directorService.sendMessage(loginId, dto.getTitle(), dto.getContent());
+
+
+    ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
     return ResponseEntity.ok(responseBody);
   }
 }
