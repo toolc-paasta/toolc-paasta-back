@@ -11,6 +11,8 @@ import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
+import toolc.daycare.domain.member.Teacher;
+import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
@@ -35,7 +37,7 @@ public class ParentsService {
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
   private final NoticeRepository noticeRepository;
-
+  private final StudentRepository studentRepository;
 
   @Autowired
   public ParentsService(MemberService memberService,
@@ -44,7 +46,7 @@ public class ParentsService {
                         StudentRepository studentRepository,
                         PasswordEncoder passwordEncoder,
                         TokenService tokenService,
-                        NoticeRepository noticeRepository) {
+                        NoticeRepository noticeRepository, StudentRepository studentRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
     this.teacherRepository = teacherRepository;
@@ -52,6 +54,7 @@ public class ParentsService {
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
     this.noticeRepository = noticeRepository;
+    this.studentRepository = studentRepository;
   }
 
   public Parents findParentsByLoginId(String loginId) {
@@ -108,7 +111,7 @@ public class ParentsService {
       .childSex(parents.getChildSex())
       .childName(parents.getChildName())
       .childId(parents.getStudent()
-                 .getId())
+        .getId())
       .loginId(parents.getLoginId())
       .sex(parents.getSex())
       .childBirthday(parents.getChildBirthday())
@@ -130,9 +133,27 @@ public class ParentsService {
     log.info("center = {}", parents.getStudent().getAClass().getCenter());
     log.info("centerId = {}", parents.getStudent().getAClass().getCenter().getId());
     return noticeRepository.findByCenterId(parentsRepository.findByLoginId(loginId).get()
-                                             .getStudent().getAClass().getCenter().getId());
-
-
+      .getStudent().getAClass().getCenter().getId());
   }
 
+  public Parents signUpAsSpouse(ParentsSignupRequestDto dto, Student student) {
+    memberService.checkDuplicateMember(dto.getLoginId());
+    Parents parents = Parents.builder()
+      .loginId(dto.getLoginId())
+      .password(passwordEncoder.encode(dto.getPassword()))
+      .name(dto.getName())
+      .connectionNumber(dto.getConnectionNumber())
+      .sex(dto.getSex())
+      .childName(student.getName())
+      .childBirthday(student.getBirthday())
+      .childSex(student.getSex())
+      .build();
+
+    parents.setStudents(student);
+    return parentsRepository.save(parents);
+  }
+
+  public Teacher findTeacherForChild(Parents parents) {
+    return teacherRepository.findByaClassId(parents.getStudent().getAClass().getId());
+  }
 }

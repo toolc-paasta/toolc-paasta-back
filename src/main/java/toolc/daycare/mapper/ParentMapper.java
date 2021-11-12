@@ -1,10 +1,11 @@
 package toolc.daycare.mapper;
 
 import toolc.daycare.domain.member.Parents;
+import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.vo.ParentDetailVO;
 
 public class ParentMapper {
-  public ParentDetailVO toParentWithDirectorVO(Parents parents) {
+  public ParentDetailVO toParentDetailVO(Parents parents, Teacher teacherForChild) {
     return ParentDetailVO.builder()
       .name(parents.getName())
       .loginId(parents.getLoginId())
@@ -17,10 +18,11 @@ public class ParentMapper {
       .className(parents.getStudent().getAClass().getName())
       .centerName(parents.getStudent().getAClass().getCenter().getName())
       .directorLoginId(parents.getStudent().getAClass().getCenter().getDirector().getLoginId())
+      .teacherLoginId(teacherForChild.getLoginId())
       .build();
   }
 
-  public ParentDetailVO toParentWithDirectorVOExcludeClass(Parents parents) {
+  public ParentDetailVO toParentDetailVOExcludeClass(Parents parents) {
     return ParentDetailVO.builder()
       .name(parents.getName())
       .loginId(parents.getLoginId())
@@ -33,7 +35,7 @@ public class ParentMapper {
       .build();
   }
 
-  public ParentDetailVO toParentWithDirectorVOExcludeDirector(Parents parents) {
+  public ParentDetailVO toParentDetailVOExcludeDirector(Parents parents) {
     return ParentDetailVO.builder()
       .name(parents.getName())
       .loginId(parents.getLoginId())

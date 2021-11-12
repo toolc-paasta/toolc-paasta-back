@@ -1,5 +1,6 @@
 package toolc.daycare.service.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +40,7 @@ import static java.util.Base64.getDecoder;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class DirectorService {
 
   private final MemberService memberService;
@@ -51,45 +53,14 @@ public class DirectorService {
   private final TokenService tokenService;
   private final CenterRegisterRepository centerRegisterRepository;
   private final TeacherRegisterClassRepository teacherRegisterClassRepository;
+  private final StudentRepository studentRepository;
+  private final ParentsRepository parentsRepository;
   private final NoticeRepository noticeRepository;
   private final S3Uploader s3Uploader;
   private final CenterRepository centerRepository;
-  private final StudentRepository studentRepository;
-  private final ParentsRepository parentsRepository;
 
-  @Autowired
-  public DirectorService(MemberService memberService,
-                         DirectorRepository directorRepository,
-                         AdminRepository adminRepository,
-                         PasswordEncoder passwordEncoder,
-                         FcmWebClient fcmWebClient,
-                         ClassRepository classRepository,
-                         TeacherRepository teacherRepository,
-                         FcmSender fcmSender,
-                         TokenService tokenService,
-                         CenterRegisterRepository centerRegisterRepository,
-                         TeacherRegisterClassRepository teacherRegisterClassRepository,
-                         NoticeRepository noticeRepository,
-                         S3Uploader s3Uploader,
-                         CenterRepository centerRepository,
-                         StudentRepository studentRepository,
-                         ParentsRepository parentsRepository) {
-    this.memberService = memberService;
-    this.adminRepository = adminRepository;
-    this.directorRepository = directorRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.classRepository = classRepository;
-    this.teacherRepository = teacherRepository;
-    this.fcmSender = fcmSender;
-    this.tokenService = tokenService;
-    this.centerRegisterRepository = centerRegisterRepository;
-    this.teacherRegisterClassRepository = teacherRegisterClassRepository;
-    this.noticeRepository = noticeRepository;
-    this.s3Uploader = s3Uploader;
-    this.centerRepository = centerRepository;
-    this.studentRepository = studentRepository;
-    this.parentsRepository = parentsRepository;
-  }
+
+  
 
   public Director signUp(String loginId, String password, String name, String connectionNumber,
                          Sex sex) {
@@ -120,7 +91,6 @@ public class DirectorService {
 
   public FcmSendBody centerRegister(String loginId, String centerName, String address,
                                     LocalDate foundationDate) {
-
     // TODO : 메세지 보내는 사람도 필요하지 않을까? - DIRECTOR 불러줘야 할 것인가?
     Director director = directorRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
@@ -142,7 +112,6 @@ public class DirectorService {
 
     // TODO : 메세지 보내는 사람도 필요하지 않을까?
     return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
-
   }
 
 
@@ -232,5 +201,20 @@ public class DirectorService {
     data.put("temp", "temp");
 
     return fcmSender.sendFcmJson(title, content, targetUser, data);
+  }
+
+  public FcmSendBody goShuttle(Center center) {
+    String title = center.getName() + "의 셔틀 버스가 출발했습니다!";
+    String body = "소중한 자녀를 안전하게 데려다 줄" + center.getName() + "의 버스가 출발했습니다 ^.^";
+
+    List<String> targetUser = new LinkedList<>();
+    classRepository.findByCenterId(center.getId())
+      .forEach(aClass -> studentRepository.findByaClassId(aClass.getId())
+        .forEach(student -> parentsRepository.findByStudentId(student.getId())
+          .forEach(parents -> targetUser.add(parents.getLoginId()))));
+
+    log.info("target Number is {}", targetUser.size());
+
+    return fcmSender.sendFcmJson(title, body, targetUser, Map.of());
   }
 }

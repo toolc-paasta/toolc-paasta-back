@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Class;
-//import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Student;
@@ -152,9 +151,25 @@ public class TeacherController {
     Class teacherClass = teacher.getAClass();
     teacherService.sendMessage(loginId,
       new MessageSendRequestDto(teacherClass.getCenter().getName(), teacherClass.getName(),
-        teacherClass.getName() + "공지가 있습니다.",dto.getTitle()));
+        teacherClass.getName() + "공지가 있습니다.", dto.getTitle()));
 
     ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("/enter/child/{id}")
+  public ResponseEntity<?> enterChild(@Auth String loginId, @PathVariable("id") Long studentId) {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+    Class aClass = teacher.getAClass();
+
+    if (aClass == null) {
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "선생님의 반이 없습니다.", null);
+      return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    studentService.enterClass(aClass, studentId);
+
+    ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "학생을 반에 등록 성공", null);
     return ResponseEntity.ok(responseBody);
   }
 }

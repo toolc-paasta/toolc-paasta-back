@@ -2,18 +2,16 @@ package toolc.daycare.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
+import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
-import toolc.daycare.dto.BaseResponseSuccessDto;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.group.request.Class.CreateClassRequestDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
@@ -27,7 +25,6 @@ import toolc.daycare.mapper.DirectorMapper;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.DirectorService;
-import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
 import toolc.daycare.vo.DirectorVO;
@@ -36,8 +33,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
@@ -176,6 +171,21 @@ public class DirectorController {
     return ResponseEntity.ok(responseBody);
   }
 
+  @PostMapping("/send/shuttle")
+  public ResponseEntity<?> sendMessage(@Auth String loginId) {
+    Director director = directorService.findDirectorByLoginId(loginId);
+
+    if (centerService.findCenter(director.getId()).isEmpty()) {
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
+      return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    FcmSendBody fcm = directorService.goShuttle(centerService.findCenter(director.getId()).get());
+
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+  
   @PostMapping("/notice")
   public ResponseEntity<?> notice(@Auth String loginId, @RequestBody NoticeRequestDto dto) throws IOException {
     Director director = directorService.findDirectorByLoginId(loginId);

@@ -15,7 +15,9 @@ import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.group.request.center.CenterRegisterRequestDto;
 
 import toolc.daycare.dto.member.request.LoginRequestDto;
+import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.service.CenterService;
+import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.AdminService;
 import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.util.RequestUtil;
@@ -33,12 +35,9 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/member/admin")
 public class AdminController {
-
   private final AdminService adminService;
   private final DirectorService directorService;
   private final CenterService centerService;
-
-
 
 
   @GetMapping

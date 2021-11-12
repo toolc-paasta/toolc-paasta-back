@@ -8,6 +8,7 @@ import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
+import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
@@ -16,7 +17,6 @@ import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ParentDetailVO;
 import toolc.daycare.vo.ParentVO;
-import toolc.daycare.vo.TeacherVO;
 
 import java.util.List;
 
@@ -41,28 +41,51 @@ public class ParentsController {
     ParentDetailVO parentDetailVO;
 
     if (parents.getStudent().getAClass() == null) {
-      parentDetailVO = mapper.toParentWithDirectorVOExcludeClass(parents);
+      parentDetailVO = mapper.toParentDetailVOExcludeClass(parents);
       ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
       return ResponseEntity.ok(response);
     }
 
     if (parents.getStudent().getAClass().getCenter() == null) {
-      parentDetailVO = mapper.toParentWithDirectorVOExcludeDirector(parents);
+      parentDetailVO = mapper.toParentDetailVOExcludeDirector(parents);
       ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
       return ResponseEntity.ok(response);
     }
 
-    parentDetailVO = mapper.toParentWithDirectorVO(parents);
+    Teacher teacherForChild = parentsService.findTeacherForChild(parents);
+    parentDetailVO = mapper.toParentDetailVO(parents, teacherForChild);
     ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
     return ResponseEntity.ok(response);
   }
 
   @PostMapping("/signup")
   public ResponseEntity<?> signUp(@RequestBody ParentsSignupRequestDto parentsSignupRequestDto) {
-    RequestUtil.checkNeedValue(parentsSignupRequestDto.getLoginId(), parentsSignupRequestDto.getPassword(), parentsSignupRequestDto.getName(), parentsSignupRequestDto.getConnectionNumber(), parentsSignupRequestDto.getChildName(), parentsSignupRequestDto.getChildBirthday());
+    RequestUtil.checkNeedValue(
+      parentsSignupRequestDto.getLoginId(),
+      parentsSignupRequestDto.getPassword(),
+      parentsSignupRequestDto.getName(),
+      parentsSignupRequestDto.getConnectionNumber(),
+      parentsSignupRequestDto.getChildName(),
+      parentsSignupRequestDto.getChildBirthday());
     RequestUtil.checkCorrectEnum(parentsSignupRequestDto.getSex(), parentsSignupRequestDto.getChildSex());
 
-    Parents newParents = parentsService.signUp(parentsSignupRequestDto.getLoginId(), parentsSignupRequestDto.getPassword(), parentsSignupRequestDto.getName(), parentsSignupRequestDto.getSex(), parentsSignupRequestDto.getConnectionNumber(), parentsSignupRequestDto.getChildName(), parentsSignupRequestDto.getChildBirthday(), parentsSignupRequestDto.getChildSex());
+    if (parentsSignupRequestDto.getSpouseLoginId() != null) {
+      Parents parents = parentsService.findParentsByLoginId(parentsSignupRequestDto.getSpouseLoginId());
+      Parents spouse = parentsService.signUpAsSpouse(parentsSignupRequestDto, parents.getStudent());
+
+      ResponseDto<Parents> responseBody = new ResponseDto<>(OK.value(), "회원가입 성공", spouse);
+      return ResponseEntity.ok(responseBody);
+    }
+
+      Parents newParents = parentsService.signUp(
+        parentsSignupRequestDto.getLoginId(),
+        parentsSignupRequestDto.getPassword(),
+        parentsSignupRequestDto.getName(),
+        parentsSignupRequestDto.getSex(),
+        parentsSignupRequestDto.getConnectionNumber(),
+        parentsSignupRequestDto.getChildName(),
+        parentsSignupRequestDto.getChildBirthday(),
+        parentsSignupRequestDto.getChildSex());
 
     ResponseDto<Parents> responseBody = new ResponseDto<>(OK.value(), "회원가입 성공", newParents);
     return ResponseEntity.ok(responseBody);
