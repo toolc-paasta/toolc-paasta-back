@@ -3,6 +3,7 @@ package toolc.daycare.controller.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toolc.daycare.authentication.Auth;
@@ -26,7 +27,7 @@ public class MemberController {
   private final FcmSender fcmSender;
 
   @PostMapping("/sendMessage")
-  public ResponseEntity<?> sendMessage(@Auth String loginId, SendMessageDto dto) {
+  public ResponseEntity<?> sendMessage(@Auth String loginId, @RequestBody SendMessageDto dto) {
 
     List<String> targetUser = new LinkedList<>();
     targetUser.add(dto.getTargetLoginId());
