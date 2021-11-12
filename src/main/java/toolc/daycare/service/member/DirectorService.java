@@ -1,9 +1,11 @@
 package toolc.daycare.service.member;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Teacher;
@@ -11,10 +13,9 @@ import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.fcm.FcmWebClient;
+import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
-import toolc.daycare.repository.interfaces.member.AdminRepository;
-import toolc.daycare.repository.interfaces.member.DirectorRepository;
-import toolc.daycare.repository.interfaces.member.TeacherRepository;
+import toolc.daycare.repository.interfaces.member.*;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
 import toolc.daycare.repository.interfaces.message.TeacherRegisterClassRepository;
 import toolc.daycare.service.fcm.FcmSendBody;
@@ -30,6 +31,7 @@ import java.util.*;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class DirectorService {
 
   private final MemberService memberService;
@@ -42,30 +44,8 @@ public class DirectorService {
   private final TokenService tokenService;
   private final CenterRegisterRepository centerRegisterRepository;
   private final TeacherRegisterClassRepository teacherRegisterClassRepository;
-
-  @Autowired
-  public DirectorService(MemberService memberService,
-                         DirectorRepository directorRepository,
-                         AdminRepository adminRepository,
-                         PasswordEncoder passwordEncoder,
-                         FcmWebClient fcmWebClient,
-                         ClassRepository classRepository,
-                         TeacherRepository teacherRepository,
-                         FcmSender fcmSender,
-                         TokenService tokenService,
-                         CenterRegisterRepository centerRegisterRepository,
-                         TeacherRegisterClassRepository teacherRegisterClassRepository) {
-    this.memberService = memberService;
-    this.adminRepository = adminRepository;
-    this.directorRepository = directorRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.classRepository = classRepository;
-    this.teacherRepository = teacherRepository;
-    this.fcmSender = fcmSender;
-    this.tokenService = tokenService;
-    this.centerRegisterRepository = centerRegisterRepository;
-    this.teacherRegisterClassRepository = teacherRegisterClassRepository;
-  }
+  private final StudentRepository studentRepository;
+  private final ParentsRepository parentsRepository;
 
   public Director signUp(String loginId, String password, String name, String connectionNumber, Sex sex) {
     memberService.checkDuplicateMember(loginId);
@@ -79,23 +59,21 @@ public class DirectorService {
 
     return directorRepository.save(director);
   }
-  
-  
 
-    public TokenVO login(String loginId, String password, String expoToken) {
-        Director director = directorRepository.findByLoginId(loginId)
-                .orElseThrow(NotExistMemberException::new);
-        memberService.checkLoginPassword(director, password);
 
-        director.setExpoToken(expoToken);
+  public TokenVO login(String loginId, String password, String expoToken) {
+    Director director = directorRepository.findByLoginId(loginId)
+      .orElseThrow(NotExistMemberException::new);
+    memberService.checkLoginPassword(director, password);
 
-        AccessToken accessToken = tokenService.create(loginId, director.getAuthority());
+    director.setExpoToken(expoToken);
 
-        return tokenService.formatting(accessToken);
-    }
+    AccessToken accessToken = tokenService.create(loginId, director.getAuthority());
+
+    return tokenService.formatting(accessToken);
+  }
 
   public FcmSendBody centerRegister(String loginId, String centerName, String address, LocalDate foundationDate) {
-
     // TODO : 메세지 보내는 사람도 필요하지 않을까? - DIRECTOR 불러줘야 할 것인가?
     Director director = directorRepository.findByLoginId(loginId)
       .orElseThrow(NotExistMemberException::new);
@@ -116,10 +94,9 @@ public class DirectorService {
 
     // TODO : 메세지 보내는 사람도 필요하지 않을까?
     return fcmSender.sendFcmJson(/*director.getName(),*/ title, body, targetUser, data);
-
   }
 
-  
+
   public List<TeacherRegisterClassMessage> findAllRegisterRequest() {
 
     return teacherRegisterClassRepository.findAll();
@@ -142,5 +119,20 @@ public class DirectorService {
 
   public Director findDirectorByLoginId(String loginId) {
     return directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+  }
+
+  public FcmSendBody goShuttle(Center center) {
+    String title = center.getName() + "의 셔틀 버스가 출발했습니다!";
+    String body = "소중한 자녀를 안전하게 데려다 줄" + center.getName() + "의 버스가 출발했습니다 ^.^";
+
+    List<String> targetUser = new LinkedList<>();
+    classRepository.findByCenterId(center.getId())
+      .forEach(aClass -> studentRepository.findByaClassId(aClass.getId())
+        .forEach(student -> parentsRepository.findByStudentId(student.getId())
+          .forEach(parents -> targetUser.add(parents.getLoginId()))));
+
+    log.info("target Number is {}", targetUser.size());
+
+    return fcmSender.sendFcmJson(title, body, targetUser, Map.of());
   }
 }

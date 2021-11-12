@@ -49,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       // DIRECTOR 권한
       .antMatchers("/api/member/director/registerCenter").hasAuthority("DIRECTOR")
       .antMatchers("/api/member/director/create/class").hasAuthority("DIRECTOR")
+      .antMatchers("/api/member/director/send/shuttle").hasAuthority("DIRECTOR")
 
       // TEACHER 권한
       .antMatchers("/api/member/teacher/read").hasAuthority("TEACHER")
