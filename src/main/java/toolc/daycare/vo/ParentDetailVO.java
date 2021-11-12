@@ -20,6 +20,7 @@ public class ParentDetailVO {
   Sex childSex;
   LocalDate childBirthday;
   String directorLoginId;
+  String teacherLoginId;
   String className;
   String centerName;
   Authority authority = PARENT;
@@ -35,7 +36,7 @@ public class ParentDetailVO {
     Sex childSex,
     LocalDate childBirthday,
     String directorLoginId,
-    String className,
+    String teacherLoginId, String className,
     String centerName) {
     this.loginId = loginId;
     this.name = name;
@@ -46,6 +47,7 @@ public class ParentDetailVO {
     this.childSex = childSex;
     this.childBirthday = childBirthday;
     this.directorLoginId = directorLoginId;
+    this.teacherLoginId = teacherLoginId;
     this.className = className;
     this.centerName = centerName;
   }

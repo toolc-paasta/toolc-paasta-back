@@ -8,6 +8,7 @@ import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
+import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.ResponseDto;
 import toolc.daycare.dto.member.request.LoginRequestDto;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
@@ -40,18 +41,19 @@ public class ParentsController {
     ParentDetailVO parentDetailVO;
 
     if (parents.getStudent().getAClass() == null) {
-      parentDetailVO = mapper.toParentWithDirectorVOExcludeClass(parents);
+      parentDetailVO = mapper.toParentDetailVOExcludeClass(parents);
       ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
       return ResponseEntity.ok(response);
     }
 
     if (parents.getStudent().getAClass().getCenter() == null) {
-      parentDetailVO = mapper.toParentWithDirectorVOExcludeDirector(parents);
+      parentDetailVO = mapper.toParentDetailVOExcludeDirector(parents);
       ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
       return ResponseEntity.ok(response);
     }
 
-    parentDetailVO = mapper.toParentWithDirectorVO(parents);
+    Teacher teacherForChild = parentsService.findTeacherForChild(parents);
+    parentDetailVO = mapper.toParentDetailVO(parents, teacherForChild);
     ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
     return ResponseEntity.ok(response);
   }

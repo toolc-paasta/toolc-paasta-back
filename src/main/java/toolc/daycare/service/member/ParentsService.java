@@ -11,6 +11,7 @@ import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Sex;
 import toolc.daycare.domain.member.Student;
+import toolc.daycare.domain.member.Teacher;
 import toolc.daycare.dto.member.request.parents.ParentsSignupRequestDto;
 import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
@@ -147,5 +148,9 @@ public class ParentsService {
 
     parents.setStudents(student);
     return parentsRepository.save(parents);
+  }
+
+  public Teacher findTeacherForChild(Parents parents) {
+    return teacherRepository.findByaClassId(parents.getStudent().getAClass().getId());
   }
 }

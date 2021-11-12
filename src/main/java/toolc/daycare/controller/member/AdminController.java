@@ -33,12 +33,9 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/member/admin")
 public class AdminController {
-
   private final AdminService adminService;
   private final DirectorService directorService;
   private final CenterService centerService;
-
-
 
 
   @GetMapping
