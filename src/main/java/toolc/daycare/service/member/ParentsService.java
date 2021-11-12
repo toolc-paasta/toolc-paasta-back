@@ -37,7 +37,6 @@ public class ParentsService {
   private final PasswordEncoder passwordEncoder;
   private final TokenService tokenService;
   private final NoticeRepository noticeRepository;
-  private final StudentRepository studentRepository;
 
   @Autowired
   public ParentsService(MemberService memberService,
@@ -46,7 +45,7 @@ public class ParentsService {
                         StudentRepository studentRepository,
                         PasswordEncoder passwordEncoder,
                         TokenService tokenService,
-                        NoticeRepository noticeRepository, StudentRepository studentRepository) {
+                        NoticeRepository noticeRepository) {
     this.memberService = memberService;
     this.parentsRepository = parentsRepository;
     this.teacherRepository = teacherRepository;
@@ -54,7 +53,6 @@ public class ParentsService {
     this.passwordEncoder = passwordEncoder;
     this.tokenService = tokenService;
     this.noticeRepository = noticeRepository;
-    this.studentRepository = studentRepository;
   }
 
   public Parents findParentsByLoginId(String loginId) {
