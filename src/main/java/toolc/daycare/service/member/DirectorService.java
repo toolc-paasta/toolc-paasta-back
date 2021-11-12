@@ -160,10 +160,30 @@ public class DirectorService {
 
     teacherRepository.save(teacher);
     teacherRegisterClassRepository.deleteById(messageId);
+
+    List<String> targetUser = new LinkedList<>();
+    Map<String, Object> data = new HashMap<>();
+
+    targetUser.add(message.getTeacher().getLoginId());
+    data.put("temp", "temp");
+
+    fcmSender.sendFcmJson("반 등록 요청 수락되었습니다." , message.getTeacher().getName() + "요청 수락 되었습니다."
+      ,targetUser, data);
+
     return teacher;
   }
 
   public void rejectRegister(Long messageId) {
+    List<String> targetUser = new LinkedList<>();
+    Map<String, Object> data = new HashMap<>();
+
+    TeacherRegisterClassMessage reject = teacherRegisterClassRepository.findById(messageId)
+      .get();
+
+    targetUser.add(reject.getTeacher().getLoginId());
+    data.put("temp", "temp");
+    fcmSender.sendFcmJson("반 등록 요청 거절되었습니다." , reject.getTeacher().getName() + "요청 거절 되었습니다."
+    ,targetUser, data);
     teacherRegisterClassRepository.deleteById(messageId);
   }
 
