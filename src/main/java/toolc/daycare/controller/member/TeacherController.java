@@ -183,14 +183,7 @@ public class TeacherController {
   public ResponseEntity<?> sendMessage(@Auth String loginId) {
     Center center = teacherService.findTeacherByLoginId(loginId).getAClass().getCenter();
 
-    Director director = directorService.findDirectorByLoginId(loginId);
-
-    if (centerService.findCenter(director.getId()).isEmpty()) {
-      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
-      return ResponseEntity.badRequest().body(responseBody);
-    }
-
-    FcmSendBody fcm = directorService.goShuttle(centerService.findCenter(director.getId()).get());
+    FcmSendBody fcm = directorService.goShuttle(center);
 
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
     return ResponseEntity.ok(responseBody);
