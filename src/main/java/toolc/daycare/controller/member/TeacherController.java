@@ -19,9 +19,7 @@ import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
-import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.mapper.TeacherMapper;
-import toolc.daycare.repository.interfaces.member.DirectorRepository;
 import toolc.daycare.service.CenterService;
 import toolc.daycare.service.fcm.FcmSendBody;
 import toolc.daycare.service.member.DirectorService;
@@ -49,7 +47,6 @@ public class TeacherController {
   private final ParentsService parentsService;
   private final CenterService centerService;
   private final DirectorService directorService;
-  private final DirectorRepository directorRepository;
   private final TeacherMapper mapper = new TeacherMapper();
 
   @GetMapping
@@ -186,7 +183,7 @@ public class TeacherController {
   public ResponseEntity<?> sendMessage(@Auth String loginId) {
     Center center = teacherService.findTeacherByLoginId(loginId).getAClass().getCenter();
 
-    Director director = directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+    Director director = directorService.findDirectorByLoginId(loginId);
 
     if (centerService.findCenter(director.getId()).isEmpty()) {
       ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
