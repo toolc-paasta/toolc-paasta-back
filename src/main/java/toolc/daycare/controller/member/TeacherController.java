@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Notice;
+import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
@@ -17,8 +19,12 @@ import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.NoticeRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.dto.member.request.teacher.TeacherSignupRequestDto;
+import toolc.daycare.exception.NotExistMemberException;
 import toolc.daycare.mapper.TeacherMapper;
+import toolc.daycare.repository.interfaces.member.DirectorRepository;
+import toolc.daycare.service.CenterService;
 import toolc.daycare.service.fcm.FcmSendBody;
+import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.service.member.ParentsService;
 import toolc.daycare.service.member.StudentService;
 import toolc.daycare.service.member.TeacherService;
@@ -41,6 +47,9 @@ public class TeacherController {
   private final TeacherService teacherService;
   private final StudentService studentService;
   private final ParentsService parentsService;
+  private final CenterService centerService;
+  private final DirectorService directorService;
+  private final DirectorRepository directorRepository;
   private final TeacherMapper mapper = new TeacherMapper();
 
   @GetMapping
@@ -170,6 +179,23 @@ public class TeacherController {
     studentService.enterClass(aClass, studentId);
 
     ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "학생을 반에 등록 성공", null);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping("/send/shuttle")
+  public ResponseEntity<?> sendMessage(@Auth String loginId) {
+    Center center = teacherService.findTeacherByLoginId(loginId).getAClass().getCenter();
+
+    Director director = directorRepository.findByLoginId(loginId).orElseThrow(NotExistMemberException::new);
+
+    if (centerService.findCenter(director.getId()).isEmpty()) {
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
+      return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    FcmSendBody fcm = directorService.goShuttle(centerService.findCenter(director.getId()).get());
+
+    ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
 }
