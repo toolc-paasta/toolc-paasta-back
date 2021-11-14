@@ -216,7 +216,7 @@ public class DirectorController {
           .getId());
 
     ResponseDto<List<ParentDetailVO>> responseBody = new ResponseDto<>(
-      OK.value(), "Teacher Class 등록 요청 조회 성공", parentDetailVOList);
+      OK.value(), "전체 학부모 조회 성공", parentDetailVOList);
     return ResponseEntity.ok(responseBody);
   }
 }
