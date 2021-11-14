@@ -17,6 +17,7 @@ public class TeacherVO {
   String directorLoginId;
   String className;
   Long classId;
+  String centerName;
   Authority authority = TEACHER;
 
   @Builder
@@ -28,7 +29,7 @@ public class TeacherVO {
     Sex sex,
     String directorLoginId,
     String className,
-    Long classId) {
+    Long classId, String centerName) {
     this.loginId = loginId;
     this.name = name;
     this.connectionNumber = connectionNumber;
@@ -37,5 +38,6 @@ public class TeacherVO {
     this.directorLoginId = directorLoginId;
     this.className = className;
     this.classId = classId;
+    this.centerName = centerName;
   }
 }

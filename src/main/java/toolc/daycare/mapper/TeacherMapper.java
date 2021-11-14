@@ -14,6 +14,7 @@ public class TeacherMapper {
       .classId(teacher.getAClass().getId())
       .className(teacher.getAClass().getName())
       .directorLoginId(teacher.getAClass().getCenter().getDirector().getLoginId())
+      .centerName(teacher.getAClass().getCenter().getName())
       .build();
   }
 

@@ -9,7 +9,6 @@ import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Notice;
-import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
