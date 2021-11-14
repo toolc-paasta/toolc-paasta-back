@@ -10,12 +10,16 @@ import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.message.CenterRegisterMessage;
 import toolc.daycare.exception.AlreadyMatchCenterException;
 import toolc.daycare.exception.NoExistCenterException;
+import toolc.daycare.mapper.ParentMapper;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
+import toolc.daycare.repository.interfaces.member.ParentsRepository;
+import toolc.daycare.repository.interfaces.member.StudentRepository;
 import toolc.daycare.repository.interfaces.message.CenterRegisterRepository;
 import toolc.daycare.service.fcm.FcmSender;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
 import toolc.daycare.vo.CenterVO;
 import toolc.daycare.vo.ClassVO;
+import toolc.daycare.vo.ParentDetailVO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +34,9 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 public class CenterService {
   private final CenterRepository centerRepository;
   private final ClassRepository classRepository;
+  private final StudentRepository studentRepository;
+  private final ParentsRepository parentsRepository;
+  private final ParentMapper parentMapper = new ParentMapper();
 
   public CenterVO register(Director director,
                            String name, String address, LocalDate foundationDate) {
@@ -76,6 +83,17 @@ public class CenterService {
     return classRepository.findByCenterId(centerId)
       .stream()
       .map(c -> new ClassVO(c.getCenter().getName(), c.getName()))
+      .collect(Collectors.toList());
+  }
+
+  public List<ParentDetailVO> getAllParentsInCenter(Long centerId) {
+    return classRepository.findByCenterId(centerId)
+      .stream()
+      .flatMap(c -> studentRepository.findByaClassId(c.getId())
+        .stream()
+        .flatMap(s -> parentsRepository.findByStudentId(s.getId())
+          .stream()
+          .map(parentMapper::toParentDetailVOExcludeDirector)))
       .collect(Collectors.toList());
   }
 }
