@@ -28,6 +28,7 @@ import toolc.daycare.service.member.DirectorService;
 import toolc.daycare.util.RequestUtil;
 import toolc.daycare.vo.ClassVO;
 import toolc.daycare.vo.DirectorVO;
+import toolc.daycare.vo.ParentDetailVO;
 
 import java.io.IOException;
 import java.util.List;
@@ -185,7 +186,7 @@ public class DirectorController {
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
-  
+
   @PostMapping("/notice")
   public ResponseEntity<?> notice(@Auth String loginId, @RequestBody NoticeRequestDto dto) throws IOException {
     Director director = directorService.findDirectorByLoginId(loginId);
@@ -195,6 +196,27 @@ public class DirectorController {
 
 
     ResponseDto<Notice> responseBody = new ResponseDto<>(OK.value(), "공지 성공", notice);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/read/parents")
+  public ResponseEntity<?> readParents(@Auth String loginId) {
+    Director director = directorService.findDirectorByLoginId(loginId);
+
+    Optional<Center> centerOptional = centerService.findCenter(director.getId());
+    if (centerOptional.isEmpty()) {
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
+      return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    List<ParentDetailVO> parentDetailVOList = centerService
+      .getAllParentsInCenter(
+        centerOptional
+          .get()
+          .getId());
+
+    ResponseDto<List<ParentDetailVO>> responseBody = new ResponseDto<>(
+      OK.value(), "Teacher Class 등록 요청 조회 성공", parentDetailVOList);
     return ResponseEntity.ok(responseBody);
   }
 }
