@@ -8,6 +8,7 @@ import toolc.daycare.authentication.AccessToken;
 import toolc.daycare.authentication.TokenService;
 import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.config.s3.S3Uploader;
+import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 //import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.group.Notice;
@@ -157,5 +158,9 @@ public class TeacherService {
     Notice notice = new Notice(dto.getTitle(), dto.getContent(), LocalDate.now(),
       teacher.getName(), imgUrl, teacher.getAClass().getCenter());
     return noticeRepository.save(notice);
+  }
+
+  public List<Notice> findAllNotice(Teacher teacher) {
+    return noticeRepository.findByCenterId(teacher.getAClass().getCenter().getId());
   }
 }

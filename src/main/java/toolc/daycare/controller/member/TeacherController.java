@@ -9,6 +9,7 @@ import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Notice;
+import toolc.daycare.domain.member.Director;
 import toolc.daycare.domain.member.Parents;
 import toolc.daycare.domain.member.Student;
 import toolc.daycare.domain.member.Teacher;
@@ -185,6 +186,17 @@ public class TeacherController {
     FcmSendBody fcm = directorService.goShuttle(center);
 
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "센터 전체 부모님 메시지 보내기 성공", fcm);
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @GetMapping("/notice")
+  public ResponseEntity<?> findAllNotice(@Auth String loginId) {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+
+    List<Notice> allNotice = teacherService.findAllNotice(teacher);
+
+    ResponseDto<List<Notice>> responseBody = new ResponseDto<>(OK.value(), "선생님 모든 공지 조회 성공",
+      allNotice);
     return ResponseEntity.ok(responseBody);
   }
 }
