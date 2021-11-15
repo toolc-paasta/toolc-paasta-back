@@ -60,8 +60,6 @@ public class DirectorService {
   private final CenterRepository centerRepository;
 
 
-  
-
   public Director signUp(String loginId, String password, String name, String connectionNumber,
                          Sex sex) {
     memberService.checkDuplicateMember(loginId);
@@ -107,7 +105,7 @@ public class DirectorService {
     data.put("foundationDate", foundationDate);
 
     CenterRegisterMessage message = new CenterRegisterMessage(director, centerName, address,
-                                                              foundationDate);
+      foundationDate);
     centerRegisterRepository.save(message);
 
     // TODO : 메세지 보내는 사람도 필요하지 않을까?
@@ -129,7 +127,7 @@ public class DirectorService {
       .get();
     Teacher teacher = message.getTeacher();
     teacher.setAClass(classRepository.findById(message.getClassId())
-                        .get());
+      .get());
 
     teacherRepository.save(teacher);
     teacherRegisterClassRepository.deleteById(messageId);
@@ -138,11 +136,11 @@ public class DirectorService {
     Map<String, Object> data = new HashMap<>();
 
     targetUser.add(message.getTeacher()
-                     .getLoginId());
+      .getLoginId());
     data.put("temp", "temp");
 
     fcmSender.sendFcmJson("반 등록 요청 수락되었습니다.", message.getTeacher()
-                            .getName() + "요청 수락 되었습니다."
+        .getName() + "요청 수락 되었습니다."
       , targetUser, data);
 
     return teacher;
@@ -156,10 +154,10 @@ public class DirectorService {
       .get();
 
     targetUser.add(reject.getTeacher()
-                     .getLoginId());
+      .getLoginId());
     data.put("temp", "temp");
     fcmSender.sendFcmJson("반 등록 요청 거절되었습니다.", reject.getTeacher()
-                            .getName() + "요청 거절 되었습니다."
+        .getName() + "요청 거절 되었습니다."
       , targetUser, data);
     teacherRegisterClassRepository.deleteById(messageId);
   }
@@ -179,8 +177,14 @@ public class DirectorService {
       imgUrl = s3Uploader.upload(getDecoder().decode(dto.getImg()));
     }
     Notice notice = new Notice(dto.getTitle(), dto.getContent(), LocalDate.now(),
-                               director.getName(), imgUrl, center);
+      director.getName(), imgUrl, center);
     return noticeRepository.save(notice);
+  }
+
+  public List<Notice> findAllNotice(Director director) {
+    Center center = centerRepository.findByDirectorId(director.getId())
+      .orElseThrow(IllegalArgumentException::new);
+    return noticeRepository.findByCenterId(center.getId());
   }
 
   public FcmSendBody sendMessage(String loginId, String title, String content) {

@@ -199,13 +199,22 @@ public class DirectorController {
     return ResponseEntity.ok(responseBody);
   }
 
+  @GetMapping("/notice")
+  public ResponseEntity<?> findAllNotice(@Auth String loginId) {
+    Director director = directorService.findDirectorByLoginId(loginId);
+
+    List<Notice> allNotice = directorService.findAllNotice(director);
+    ResponseDto<List<Notice>> responseBody = new ResponseDto<>(OK.value(), "공지 성공", allNotice);
+    return ResponseEntity.ok(responseBody);
+  }
+
   @GetMapping("/read/parents")
   public ResponseEntity<?> readParents(@Auth String loginId) {
     Director director = directorService.findDirectorByLoginId(loginId);
 
     Optional<Center> centerOptional = centerService.findCenter(director.getId());
     if (centerOptional.isEmpty()) {
-      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장님 모든 공지 조회 성공", null);
       return ResponseEntity.badRequest().body(responseBody);
     }
 
