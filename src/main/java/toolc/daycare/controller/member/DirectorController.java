@@ -204,7 +204,7 @@ public class DirectorController {
     Director director = directorService.findDirectorByLoginId(loginId);
 
     List<Notice> allNotice = directorService.findAllNotice(director);
-    ResponseDto<List<Notice>> responseBody = new ResponseDto<>(OK.value(), "공지 성공", allNotice);
+    ResponseDto<List<Notice>> responseBody = new ResponseDto<>(OK.value(), "원장님 모든 공지 조회 성공", allNotice);
     return ResponseEntity.ok(responseBody);
   }
 
@@ -214,7 +214,7 @@ public class DirectorController {
 
     Optional<Center> centerOptional = centerService.findCenter(director.getId());
     if (centerOptional.isEmpty()) {
-      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장님 모든 공지 조회 성공", null);
+      ResponseDto<?> responseBody = new ResponseDto<>(BAD_REQUEST.value(), "원장의 유치원이 없습니다.", null);
       return ResponseEntity.badRequest().body(responseBody);
     }
 
