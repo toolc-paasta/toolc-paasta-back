@@ -22,6 +22,8 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
+import static org.springframework.http.HttpStatus.OK;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/member/parents")
@@ -55,6 +57,7 @@ public class ParentsController {
     Teacher teacherForChild = parentsService.findTeacherForChild(parents);
     parentDetailVO = mapper.toParentDetailVO(parents, teacherForChild);
     ResponseDto<ParentDetailVO> response = new ResponseDto<>(OK.value(), "정보 조회 성공", parentDetailVO);
+
     return ResponseEntity.ok(response);
   }
 
@@ -118,7 +121,7 @@ public class ParentsController {
     List<Notice> allNotice = parentsService.getAllNotice(loginId);
 
     ResponseDto<List<Notice>> responseBody = new ResponseDto<>(OK.value(), "모든 공지 조회", allNotice);
+
     return ResponseEntity.ok(responseBody);
   }
-
 }

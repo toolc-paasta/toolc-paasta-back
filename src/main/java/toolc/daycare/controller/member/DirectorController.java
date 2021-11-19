@@ -226,6 +226,7 @@ public class DirectorController {
 
     ResponseDto<List<ParentDetailVO>> responseBody = new ResponseDto<>(
       OK.value(), "전체 학부모 조회 성공", parentDetailVOList);
+
     return ResponseEntity.ok(responseBody);
   }
 }

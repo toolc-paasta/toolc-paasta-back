@@ -71,6 +71,15 @@ public class TeacherController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping
+  public ResponseEntity<?> getInfo(@Auth String loginId) {
+    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
+
+    ResponseDto<Teacher> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacher);
+
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping("/signup")
   public ResponseEntity<?> signUp(@RequestBody TeacherSignupRequestDto teacherSignupRequestDto) {
     RequestUtil.checkNeedValue(
@@ -120,7 +129,6 @@ public class TeacherController {
     ResponseDto<FcmSendBody> responseBody = new ResponseDto<>(OK.value(), "반 등록 요청 성공", fcm);
     return ResponseEntity.ok(responseBody);
   }
-
 
   @PostMapping("/message/sendClass")
   public ResponseEntity<?> sendClass(@Auth String loginId, @RequestBody MessageSendRequestDto dto) {

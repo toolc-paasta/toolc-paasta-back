@@ -38,7 +38,6 @@ public class AdminService {
   private final TokenService tokenService;
   private final FcmSender fcmSender;
 
-
   public TokenVO login(String loginId, String password, String expoToken) {
       Admin admin = findAdminByLoginId(loginId);
       memberService.checkLoginPassword(admin, password);

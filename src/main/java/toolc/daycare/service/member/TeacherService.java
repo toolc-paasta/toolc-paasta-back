@@ -10,7 +10,6 @@ import toolc.daycare.authentication.TokenVO;
 import toolc.daycare.config.s3.S3Uploader;
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.group.Class;
-//import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.group.Notice;
 import toolc.daycare.domain.member.*;
 import toolc.daycare.domain.message.TeacherRegisterClassMessage;
@@ -20,7 +19,6 @@ import toolc.daycare.dto.member.request.teacher.MessageSendRequestDto;
 import toolc.daycare.dto.member.request.teacher.RegisterClassRequestDto;
 import toolc.daycare.repository.interfaces.group.CenterRepository;
 import toolc.daycare.repository.interfaces.group.ClassRepository;
-//import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.group.NoticeRepository;
 import toolc.daycare.repository.interfaces.member.ParentsRepository;
 import toolc.daycare.repository.interfaces.member.StudentRepository;
@@ -36,6 +34,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.Base64.getDecoder;
+
 
 @Slf4j
 @RequiredArgsConstructor

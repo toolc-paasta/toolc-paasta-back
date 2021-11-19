@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toolc.daycare.authentication.Auth;
 import toolc.daycare.authentication.TokenVO;
-
 import toolc.daycare.domain.group.Center;
 import toolc.daycare.domain.member.Admin;
 import toolc.daycare.domain.message.CenterRegisterMessage;
@@ -27,6 +26,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -101,7 +102,6 @@ public class AdminController {
 
     ResponseDto<List<CenterRegisterMessage>> responseBody =
       new ResponseDto<>(OK.value(), "모든 요청 조회", registers);
-
 
     return ResponseEntity.ok(responseBody);
   }
