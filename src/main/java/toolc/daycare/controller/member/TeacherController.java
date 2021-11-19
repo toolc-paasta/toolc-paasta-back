@@ -71,15 +71,6 @@ public class TeacherController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping
-  public ResponseEntity<?> getInfo(@Auth String loginId) {
-    Teacher teacher = teacherService.findTeacherByLoginId(loginId);
-
-    ResponseDto<Teacher> response = new ResponseDto<>(OK.value(), "정보 조회 성공", teacher);
-
-    return ResponseEntity.ok(response);
-  }
-
   @PostMapping("/signup")
   public ResponseEntity<?> signUp(@RequestBody TeacherSignupRequestDto teacherSignupRequestDto) {
     RequestUtil.checkNeedValue(
