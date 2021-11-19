@@ -16,22 +16,19 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Class extends BaseEntity {
 
-    private String name;
-
-    @OneToMany(mappedBy = "aClass", cascade = CascadeType.ALL)
-    private List<Student> students = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "center_id")
-    private Center center;
+  private String name;
 
 
-    @Builder
-    public Class(String name) {
-        this.name = name;
-    }
+  @ManyToOne
+  @JoinColumn(name = "center_id")
+  private Center center;
 
-    public void setCenter(Center center){
-        this.center = center;
-    }
+  @Builder
+  public Class(String name) {
+    this.name = name;
+  }
+
+  public void setCenter(Center center) {
+    this.center = center;
+  }
 }

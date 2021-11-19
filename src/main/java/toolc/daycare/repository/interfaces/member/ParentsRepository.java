@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ParentsRepository {
-    Parents save(Parents parents);
-    Optional<Parents> findByLoginId(String loginId);
-    List<Parents> findByStudentId(Long id);
+  Parents save(Parents parents);
 
+  Optional<Parents> findByLoginId(String loginId);
+
+  List<Parents> findByStudentId(Long id);
+  Parents findByNameAndConnectionNumber(String name, String connectionNumber);
 }

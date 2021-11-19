@@ -19,12 +19,8 @@ public class Shuttle extends BaseEntity {
     @OneToMany(mappedBy = "shuttle", cascade = CascadeType.ALL)
     private List<ShuttleArea> areas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "shuttle", cascade = CascadeType.ALL)
-    private List<Student> students = new ArrayList<>();
-
     @Builder
     public Shuttle(String driverName) {
         this.driverName = driverName;
     }
-
 }

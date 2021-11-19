@@ -8,8 +8,10 @@ import toolc.daycare.authentication.TokenParser;
 import toolc.daycare.authentication.time.ConstantTime;
 import toolc.daycare.authentication.time.CurrentTimeServer;
 import toolc.daycare.authentication.time.RealTime;
-import toolc.daycare.domain.member.Authority;
+import toolc.daycare.domain.group.Center;
+import toolc.daycare.domain.member.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static java.time.ZoneOffset.UTC;
@@ -41,5 +43,53 @@ public class Fixture {
 
   public static TokenParser tokenParser() {
     return new TokenParser(jwtSetConfig());
+  }
+
+  public static Director.DirectorBuilder director() {
+    return Director.builder()
+      .name("director001")
+      .sex(Sex.MAN)
+      .connectionNumber("010-0000-1111")
+      .password("password001")
+      .token("token001")
+      .loginId("director001");
+  }
+
+  public static Center.CenterBuilder center() {
+    return Center.builder()
+      .star(5L)
+      .foundationDate(LocalDate.of(1998, 2, 25))
+      .address("집")
+      .name("center001");
+  }
+
+  public static Teacher.TeacherBuilder teacher() {
+    return Teacher.builder()
+      .connectionNumber("010-1111-2222")
+      .loginId("teacher001")
+      .name("teacher")
+      .password("password001")
+      .sex(Sex.MAN)
+      .token("token001");
+  }
+
+  public static Parents.ParentsBuilder parent() {
+    return Parents.builder()
+      .loginId("parent001")
+      .password("password001")
+      .sex(Sex.MAN)
+      .connectionNumber("010-1111-1111")
+      .token("token001")
+      .childBirthday(LocalDate.of(2000, 11, 11))
+      .childName("student001")
+      .childSex(Sex.MAN)
+      .name("parent");
+  }
+
+  public static Student.StudentBuilder student() {
+    return Student.builder()
+      .name("student001")
+      .sex(Sex.MAN)
+      .birthday(LocalDate.of(2000, 11, 11));
   }
 }

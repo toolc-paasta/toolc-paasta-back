@@ -25,7 +25,6 @@ public class Parents extends MemberBaseEntity{
     @Enumerated(value = EnumType.STRING)
     private Sex childSex;
 
-
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;

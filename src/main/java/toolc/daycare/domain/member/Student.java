@@ -10,56 +10,51 @@ import toolc.daycare.domain.group.Class;
 import toolc.daycare.domain.group.Shuttle;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student extends BaseEntity {
 
-    private String name;
-    private Integer age;
-    private String connectionNumber;
+  private String name;
+  private LocalDate birthday;
+//    private String connectionNumber;
 
-    @Enumerated(value = EnumType.STRING)
-    private Sex sex;
-
-
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private Class aClass;
-
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private Area area;
-
-    @ManyToOne
-    @JoinColumn(name = "shuttle_id")
-    private Shuttle shuttle;
-
-    @OneToMany(mappedBy = "student")
-    private List<Parents> parents = new ArrayList<>();
+  @Enumerated(value = EnumType.STRING)
+  private Sex sex;
 
 
-    @Builder
-    public Student(String name, Integer age, String connectionNumber, Sex sex) {
-        this.name = name;
-        this.age = age;
-        this.connectionNumber = connectionNumber;
-        this.sex = sex;
-    }
+  @ManyToOne
+  @JoinColumn(name = "class_id")
+  private Class aClass;
+
+  @ManyToOne
+  @JoinColumn(name = "area_id")
+  private Area area;
+
+  @ManyToOne
+  @JoinColumn(name = "shuttle_id")
+  private Shuttle shuttle;
 
 
-    public void setaClass(Class aClass){
-        this.aClass = aClass;
-    }
+  @Builder
+  public Student(String name, LocalDate birthday, Sex sex) {
+    this.name = name;
+    this.birthday = birthday;
+//        this.connectionNumber = connectionNumber;
+    this.sex = sex;
+  }
 
-    public void setArea(Area area){
-        this.area = area;
-    }
+  public void setaClass(Class aClass) {
+    this.aClass = aClass;
+  }
 
-    public void setShuttle(Shuttle shuttle){
-        this.shuttle = shuttle;
-    }
+  public void setArea(Area area) {
+    this.area = area;
+  }
+
+  public void setShuttle(Shuttle shuttle) {
+    this.shuttle = shuttle;
+  }
 }

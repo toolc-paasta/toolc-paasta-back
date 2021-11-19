@@ -47,14 +47,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .antMatchers("/api/member/admin/allowCenter").hasAuthority("ADMIN")
 
       // DIRECTOR 권한
-      .antMatchers("/api/member/director/centerRegister").hasAuthority("DIRECTOR")
+      .antMatchers("/api/member/director/registerCenter").hasAuthority("DIRECTOR")
+      .antMatchers("/api/member/director/create/class").hasAuthority("DIRECTOR")
+      .antMatchers("/api/member/director/send/shuttle").hasAuthority("DIRECTOR")
+      .antMatchers("/api/member/director/read/parents").hasAuthority("DIRECTOR")
 
       // TEACHER 권한
-      // 추가 예정
+      .antMatchers("/api/member/teacher/read").hasAuthority("TEACHER")
+      .antMatchers("/enter/child/**").hasAuthority("TEACHER")
 
       // PARENT 권한
       // 추가예정
-
       .antMatchers("/api/member/director").authenticated()
       .antMatchers("/api/member/**").permitAll()
       .antMatchers("/**").permitAll()

@@ -2,10 +2,6 @@ spring:
   profiles:
     active: local
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-
 logging:
   level:
     org.hibernate.SQL: debug
@@ -13,3 +9,4 @@ logging:
 jwt:
   secretKey: dfjklaefjlaejfdcDfejA123idjfW123oidfRtestHfdjaidfRRtest12T3413dfjladfaeDFADFAdfvdsAERdfAERad12ADFerDFAvEFDF
   algorithm: HS512
+
