@@ -38,6 +38,36 @@
   - Notion, Slack
   - Figma
 
+### 🐟 패키지 구조
+```javaScript
+-authentication
+  -config
+  -exception
+  -filter
+  -handler
+  -time
+-config
+  -s3
+-controller
+  -member
+-domain
+  -connection
+  -group
+  -member
+  -message
+-exception
+-fcm
+-mapper
+-repository
+  -interface
+  -springdatajpa
+-service
+  -fcm
+  -member
+-util
+-vo
+```
+
 ---
 ### 🔖서비스 핵심 기능
 #### 🌏 원장 등 각 사용자 별 회원가입
