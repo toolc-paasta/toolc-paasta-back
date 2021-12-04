@@ -11,11 +11,11 @@
 
 ### 🙋‍♀️ 팀원 소개
 
-  
-| 박지수 | 오승재 |
-|:-----:|:------:|
-|<img src="https://avatars.githubusercontent.com/u/32264819?v=4" width="200" height="200">| <img src="https://avatars.githubusercontent.com/u/33858991?v=4" alt="profile" width="200" height="200">|
-|[JisooPark27](https://github.com/JisooPark27)|[Seungjae](https://github.com/oh980225)|
+
+|이름|<h3> 박지수 </h3> |<h3> 오승재 </h3> |
+|:-----:|:------:|:------:|
+| |<img src="https://avatars.githubusercontent.com/u/32264819?v=4" width="200" height="200">| <img src="https://avatars.githubusercontent.com/u/33858991?v=4" alt="profile" width="200" height="200">|
+|GitHub|[JisooPark27](https://github.com/JisooPark27)|[Seungjae](https://github.com/oh980225)|
 
 ---
 
