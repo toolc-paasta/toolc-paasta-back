@@ -1,3 +1,7 @@
+<p align="center">
+  <img src= "https://user-images.githubusercontent.com/32264819/144703687-1d8efee2-104d-47b3-8d9f-340d7c233740.gif" alt="Logo width="200" height="200">
+</p>
+<h2 align="center">👶Kin - In 🧒<br><br> 똑똑한 유치원/어린이집 관리 앱, 키드인 </h2>                                                                                                                                         
 
                                                                                                                                          
 ###  📑 프로젝트 소개
