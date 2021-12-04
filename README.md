@@ -15,7 +15,7 @@
 | 박지수 | 오승재 |
 |:-----:|:------:|
 |<img src="https://avatars.githubusercontent.com/u/32264819?v=4" width="200" height="200">| <img src="https://avatars.githubusercontent.com/u/33858991?v=4" alt="profile" width="200" height="200">|
-|[JisooPark27](https://github.com/JisooPark27)|[oh980225](https://github.com/oh980225)|
+|[JisooPark27](https://github.com/JisooPark27)|[Seungjae](https://github.com/oh980225)|
 
 ---
 
@@ -37,36 +37,6 @@
   - GitHub
   - Notion, Slack
   - Figma
- 
-### 🐟 패키지 구조
-```javaScript
--authentication
-  -config
-  -exception
-  -filter
-  -handler
-  -time
--config
-  -s3
--controller
-  -member
--domain
-  -connection
-  -group
-  -member
-  -message
--exception
--fcm
--mapper
--repository
-  -interface
-  -springdatajpa
--service
-  -fcm
-  -member
--util
--vo
-```
 
 ---
 ### 🔖서비스 핵심 기능
