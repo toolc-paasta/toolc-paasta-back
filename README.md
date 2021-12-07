@@ -22,6 +22,10 @@
 ### 🐟 아키텍쳐
 ![image](https://user-images.githubusercontent.com/32264819/144704752-a45b41eb-cb91-4c5f-a44c-8f2d1ff7b9bd.png)
 
+### 🐟 E-R Diagram
+<img src="https://user-images.githubusercontent.com/32264819/145036077-0ab3238b-8904-49af-95ed-bf51041debb4.png" alt="E-R Diagram" width="600" height="800">
+
+
 ### 🐟 Stack
 - Backend
   - Java, JavaScript
